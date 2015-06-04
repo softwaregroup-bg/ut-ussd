@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Ussd page</title>
+        <link href="css/common.css" media="all" rel="stylesheet" type="text/css" />
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script src="js/common.js" type="text/javascript"></script>
+        <script src="js/phone.js" type="text/javascript"></script>
+        <script src="js/clock.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            var code;
+            jQuery(document).ready(function(){
+                code = '*105#';
+                var codeInput = jQuery('#code-input input');
+                var phoneInput = jQuery('#phone-input input');
+                codeInput.val(code);
+                function makeUssdRequest(){
+                  new ussdRequest(jQuery('#send-command'),jQuery('#response code'),jQuery('#phone-input'),'.data-collection');
+                }
+                jQuery('#send-command').on('click', makeUssdRequest);
+                phoneInput.focus();
+                phoneInput[0].onkeydown = function(event){
+                  if(event.keyCode == 13){
+                    codeInput.val(code);
+                    if(clock){
+                        clock.reset();
+                        clock.start();
+                    }
+                    makeUssdRequest();
+                  } 
+                };
+                /*jQuery.ajax({
+                  url: '/p/db/public.xml?export=1&export_json=1'
+                })
+                .done(function(data) { 
+                    $('#mfsp_name').text(data.DATAPACKET.ROWDATA[0].mfsp_name);
+                    $('#phone-input-element').val(data.DATAPACKET.ROWDATA[0].default_ussd_phone);
+                })
+                .fail(function(r,err,errDesc) {
+                    // fail
+                });*/
+            });
+        </script>
+    </head>
+    <body>
+        <div id="phone">
+            <div id="mfsp_name"></div>
+            <form onsubmit="return false;" id="result-form">
+                <!-- stopwatch -->
+                <div id="clock"></div>
+                <!-- history -->
+                <div id="responseWrapper">
+                    <div id="customer-name">
+                        <b>Name : </b>
+                        <span>Stamen Peev</span>
+                    </div>
+                    <div id="response">
+                        <code></code>
+                    </div>
+                </div>
+                <div id="phone-input-wrapper">
+                    <label for="phone" id="phone-input">
+                        <b>Phone :</b>
+                        <input id="phone-input-element" class="data-collection" type="text" name="phone" value="1234"/>
+                    </label>
+                </div>
+                <!-- phone -->
+                <div id="screen">
+                    <div id="infoPane"></div>
+                    <div id="phone_screen">
+                        <code></code>
+                    </div>
+                    <div id="code-input">
+                        <input id="code-input-element" class="data-collection" type="text" name="message" />
+                    </div>
+                </div>
+                <button id="send-command"></button>
+                <div id="redBtn" onclick="closeUSSDSession(code)"></div>
+                <div id="clearBtn" onclick="backspace()"></div>
+                <div id="buttonsWrapper">
+                    <div id="btn_1" class="phoneBtn row1 col1"></div>
+                    <div id="btn_2" class="phoneBtn row1 col2"></div>
+                    <div id="btn_3" class="phoneBtn row1 col3"></div>
+                    <div id="btn_4" class="phoneBtn row2 col1"></div>
+                    <div id="btn_5" class="phoneBtn row2 col2"></div>
+                    <div id="btn_6" class="phoneBtn row2 col3"></div>
+                    <div id="btn_7" class="phoneBtn row3 col1"></div>
+                    <div id="btn_8" class="phoneBtn row3 col2"></div>
+                    <div id="btn_9" class="phoneBtn row3 col3"></div>
+                    <div id="btn_asterisk" class="phoneBtn row4 col1"></div>
+                    <div id="btn_0" class="phoneBtn row4 col2"></div>
+                    <div id="btn_hash" class="phoneBtn row4 col3"></div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,228 @@
+body{
+  font-size: 11px;
+  font-family: tahoma, verdana;
+}
+#result-form,#result-form *{display: block;overflow: hidden;}
+#result-form label *{float: left;}
+#result-form label b{margin: 3px 10px 0 0;}
+#result-form label input{border: 1px solid #ccc;}
+#response code{overflow-y: scroll;width:100%;height: 100%;padding: 10px;background: #FAFAFA;}
+#clock.started{font-weight:bold;color:red;}
+#result-form .hidden{display: none;}
+
+
+html,
+body{
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+#phone,
+#phone *{
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  position: absolute; 
+}
+
+#phone {
+  top: 10px;
+  width: 100%;
+  height: 600px;
+  background: url('../img/nokia101_300x600.jpg') no-repeat top left;
+}
+
+#screen{
+  width: 166px;
+  height: 204px;
+  background: #FFF;
+  top: 86px;
+  left: 67px;
+  font-family: Lucida Console, Monaco, monospace;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#phone_screen{
+  width: 100%;
+  height: 165px;
+  padding: 5px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+}
+
+#phone_screen code{
+  width: 100%;
+  padding-right: 10px;
+}
+
+#mfsp_name{
+  left: 300px;
+  width: 400px;
+  height: 25px;
+  text-align: center;
+  font-size: 18px;
+  color: #E30613;
+  font-weight: bold;
+  font-family: Arial, Verdana, sans-serif;
+}
+
+#infoPane{
+  width: 100%;
+  height: 100%;
+  padding-top: 60px;
+  background: white;
+  display: none;
+  z-index: 99;
+  text-align: center;
+}
+
+#code-input{
+  width: 100%;
+  height: 35px;
+  top: 170px;
+  padding: 5px;
+}
+
+#send-command{
+  width: 37px;
+  height: 23px;
+  left: 55px;
+  top: 364px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+#redBtn{
+  width: 36px;
+  height: 27px;
+  left: 210px;
+  top: 361px;
+  cursor: pointer;
+}
+
+#result-form{
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+#screen input{
+  font-family: Lucida Console, Monaco, monospace;
+  font-size: 14px;
+  width: 156px;
+  height: 25px;
+  border: 1px solid #DDD;
+  color: #333;
+  padding: 0 10px;
+}
+
+#responseWrapper{
+  width: 400px;
+  left: 300px;
+  top: 70px;
+}
+
+#responseWrapper *{
+  position: static;
+}
+
+#responseWrapper #customer-name{
+  padding-bottom: 5px;
+  word-wrap: break-word;
+  display: none;
+}
+
+#responseWrapper #customer-name *{
+  display: inline;
+}
+
+#responseWrapper #customer-name span{
+  padding-left: 10px;
+  font-size: 16px;
+}
+
+#response{
+  width: 100%;
+  height: 480px;
+  font-size: 16px;
+  color: #555;
+}
+
+#clock{
+  left: 640px;
+  top: 40px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#phone-input-wrapper{
+  width: 270px;
+  left: 300px;
+  top: 35px;
+}
+
+#phone-input-wrapper *{
+  position: static;
+}
+
+code {
+  white-space: pre-wrap;
+}
+
+#clearBtn{
+  width: 41px;
+  height: 28px;
+  top: 329px;
+  left: 206px;
+  cursor: pointer;
+}
+
+#buttonsWrapper{
+  width: 209px;
+  height: 155px;
+  top: 400px;
+  left: 46px;
+}
+
+#buttonsWrapper .phoneBtn{
+  width: 65px;
+  height: 35px;
+  cursor: pointer;
+}
+
+#buttonsWrapper .phoneBtn.col1{
+  left: 1px;
+}
+
+#buttonsWrapper .phoneBtn.col2{
+  left: 72px;
+}
+
+#buttonsWrapper .phoneBtn.col3{
+  left: 142px;
+}
+
+#buttonsWrapper .phoneBtn.row1{
+  top: 4px;
+}
+
+#buttonsWrapper .phoneBtn.row2{
+  top: 42px;
+}
+
+#buttonsWrapper .phoneBtn.row3{
+  top: 79px;
+}
+
+#buttonsWrapper .phoneBtn.row4{
+  top: 116px;
+}
