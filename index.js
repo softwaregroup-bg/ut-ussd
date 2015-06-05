@@ -92,10 +92,12 @@ module.exports = {
         });
     },
     request: function(msg) {
+        var commands = [];
         if (msg.message.startsWith('*') && msg.message.endsWith('#')) {
-            msg.message = msg.message.slice(1, -1);
+            commands.push(msg.message);
+        } else {
+            commands = msg.message.split('*');
         }
-        var commands = msg.message.split('*');
         return session.get(msg.phone)
             .then(function(data) {
                 if (!data) {
