@@ -106,6 +106,16 @@ module.exports = {
                 return when.iterate(
                     function(data) {
                         data.system.message = commands.shift();
+                        if(data.system.paging) {
+                            if(data.system.paging.items[data.system.message]) {
+                                // item selected
+                            } else if(data.system.paging.next == data.system.message) {
+                                data.system.paging.page++;
+                                return data;
+                            } else {
+                                delete data.system.paging;
+                            }
+                        }
                         ussd.route(data);
                         return ussd.callController(data)
                             .then(session.put)
@@ -127,11 +137,11 @@ module.exports = {
                     data
                 )
             })
-            .then(function(data){
+            .then(function(data) {
                 return ussd.render(data)
                     .then(function(result) {
                         return session.put(data)
-                            .then(function(data){ console.dir(result)
+                            .then(function(data) {
                                 return result;
                             });
                     });
