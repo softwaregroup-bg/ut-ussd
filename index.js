@@ -127,7 +127,15 @@ module.exports = {
                     data
                 )
             })
-            .then(ussd.render)
+            .then(function(data){
+                return ussd.render(data)
+                    .then(function(result) {
+                        return session.put(data)
+                            .then(function(data){ console.dir(result)
+                                return result;
+                            });
+                    });
+            })
             .catch(function(errorMessage) {
                 return {
                     shortMessage: errorMessage,

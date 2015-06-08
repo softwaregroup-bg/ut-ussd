@@ -1,0 +1,27 @@
+{
+    "tags": {
+        "ussd-paging": {
+            "renderer": "./marko-tags/ussd-paging/index.js",
+            "attributes": {
+                "params": {
+                    "type" : "expression"
+                },
+                "collection": {
+                    "type" : "expression"
+                },
+                "range": {
+                    "type" : "expression"
+                },
+                "var": {
+                    "type": "identifier"
+                }
+            },
+            "vars": [
+                {
+                    "name-from-attribute": "var"
+                }
+            ]
+        }
+    }
+}
+

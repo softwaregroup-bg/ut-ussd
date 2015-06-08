@@ -146,7 +146,7 @@ function closeUSSDSession(code){
   })
   .done(function(data) {
     $("#phone_screen code").html(data.documentElement.children[1].textContent);
-    $('#code-input input').val('*105#');
+    $('#code-input input').val('*131#');
   })
   .fail(function(r,err,errDesc) {
     $("#phone_screen code").text('Error: '+err);
