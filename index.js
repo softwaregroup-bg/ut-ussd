@@ -106,7 +106,7 @@ module.exports = {
             .then(function(data) {
                 return ussd.render(data)
                     .then(function(result) {
-                        return session.put(data)
+                        return session.set(data)
                             .then(function(data) {
                                 return result;
                             });
