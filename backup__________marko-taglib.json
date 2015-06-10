@@ -1,7 +1,7 @@
 {
     "tags": {
         "ussd-paging": {
-            "renderer": "./marko-tags/ussd-paging/index.js",
+            "renderer": "./marko-tags/ussd-paging",
             "attributes": {
                 "params": {
                     "type" : "expression"

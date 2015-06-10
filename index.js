@@ -3,11 +3,13 @@ var Path = require('path');
 var initRoute;
 var session;
 var ussd;
+var config;
 module.exports = {
     init: function(bus) {
         initRoute = bus.importMethod('internal.registerRequestHandler');
         session = require('./lib/session')({ bus: bus });
         ussd = require('./lib/ussd')({ bus: bus });
+        config = bus.config.ussd;
     },
     initRoutes: function() {
         initRoute({
@@ -92,51 +94,15 @@ module.exports = {
         });
     },
     request: function(msg) {
-        var commands = [];
-        if (msg.message.startsWith('*') && msg.message.endsWith('#')) {
-            commands.push(msg.message);
-        } else {
-            commands = msg.message.split('*');
-        }
         return session.get(msg.phone)
             .then(function(data) {
-                if (!data) {
-                    data = {system:{phone: msg.phone, currentState: ''}}; // no session
+                if(!data) {
+                    data = {system: {phone: msg.phone, backtrack: []}}
                 }
-                return when.iterate(
-                    function(data) {
-                        data.system.message = commands.shift();
-                        if(data.system.paging) {
-                            if(data.system.paging.items[data.system.message]) {
-                                // item selected
-                            } else if(data.system.paging.next == data.system.message) {
-                                data.system.paging.page++;
-                                return data;
-                            } else {
-                                delete data.system.paging;
-                            }
-                        }
-                        ussd.route(data);
-                        return ussd.callController(data)
-                            .then(session.put)
-                            .catch(function(err) {
-                                commands = [];
-                                if (typeof err === 'string') { // errorMessage
-                                    throw err
-                                } else { // errorState
-                                    return err;
-                                }
-                            })
-                    },
-                    function(context) { // predicate
-                        return !commands.length;
-                    },
-                    function(context) { // handler
-                        //
-                    },
-                    data
-                )
+                data.system.message = msg.message;
+                return ussd.route(data);
             })
+            .then(ussd.callController)
             .then(function(data) {
                 return ussd.render(data)
                     .then(function(result) {
@@ -151,6 +117,6 @@ module.exports = {
                     shortMessage: errorMessage,
                     sourceAddr: msg.phone
                 };
-            })
+            });
     }
 };

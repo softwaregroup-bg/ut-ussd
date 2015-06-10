@@ -1,6 +1,7 @@
+var url = require('url');
 exports.render = function(input, out) {
     out = out.beginAsync();
-    if(!input.params.system.paging) {
+    if (!input.params.system.paging) {
         input.params.system.paging = {items: {}, next: null, page: 1}
     }
     var range = input.range;
