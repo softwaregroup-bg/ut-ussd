@@ -7,8 +7,8 @@ var config;
 module.exports = {
     init: function(bus) {
         initRoute = bus.importMethod('internal.registerRequestHandler');
-        session = require('./lib/session')({ bus: bus });
-        ussd = require('./lib/ussd')({ bus: bus });
+        session = require('./lib/session')({bus: bus});
+        ussd = require('./lib/ussd')({bus: bus});
         config = bus.config.ussd;
     },
     initRoutes: function() {
@@ -96,8 +96,8 @@ module.exports = {
     request: function(msg) {
         return session.get(msg.phone)
             .then(function(data) {
-                if(!data) {
-                    data = {system: {phone: msg.phone, backtrack: []}}
+                if (!data) {
+                    data = {system: {phone: msg.phone, backtrack: [], routes: {}}}
                 }
                 data.system.message = msg.message;
                 return ussd.route(data);
