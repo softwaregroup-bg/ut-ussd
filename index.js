@@ -98,17 +98,19 @@ module.exports = {
         if ((config.strings || []).indexOf(msg.message) != -1) { // ussd string
             ussdString = msg.message.split('*').slice(1);
             msg.message = '*' + ussdString.shift() + '#';
-            ussdString[ussdString.length - 1] = ussdString[ussdString.length - 1].slice(0, -1);
+            ussdString.push(ussdString.pop().slice(0, -1)); // remove hash at the end of the last element
         };
         return session.get(msg.phone).then(function(data) {
             if (!data) {
                 data = {system: {phone: msg.phone, backtrack: [], routes: {}}}
             } else if (data.system.ussdString) {
-                var commands = data.system.ussdString;
+                var commands = data.system.ussdString.slice(0); // IMPORTANT: make copy to preserve original strings in model
                 commands.unshift(msg.message);
+                var i = 0; // iterration counter
                 return when.iterate(function(data) {
                     return ussd.route(data).then(function(data) {
-                        if (data.system.state == data.system.prevState) {
+                        if (i && data.system.state == data.system.prevState) {
+                            // if states match and flow wasn't previously interrupted (i.e the code here should never execute for the first when.iterrate cycle)
                             commands.splice(1);
                             return when.reject(data);
                         } else {
@@ -128,12 +130,12 @@ module.exports = {
                         return false;
                     }
                 }, function(context) { // handler
-                    // do nothing
+                    i++;
                 }, data).then(ussd.route).then(ussd.callController).catch(function(err) {
                     if (err.system) {
                         return err;
                     } else {
-                        return when.reject(data);
+                        return when.reject(err);
                     }
                 });
             }
