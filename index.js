@@ -94,29 +94,65 @@ module.exports = {
         });
     },
     request: function(msg) {
-        return session.get(msg.phone)
-            .then(function(data) {
-                if (!data) {
-                    data = {system: {phone: msg.phone, backtrack: [], routes: {}}}
-                }
-                data.system.message = msg.message;
-                return ussd.route(data);
-            })
-            .then(ussd.callController)
-            .then(function(data) {
-                return ussd.render(data)
-                    .then(function(result) {
-                        return session.set(data)
-                            .then(function(data) {
-                                return result;
-                            });
+        var ussdString = null;
+        if ((config.strings || []).indexOf(msg.message) != -1) { // ussd string
+            ussdString = msg.message.split('*').slice(1);
+            msg.message = '*' + ussdString.shift() + '#';
+            ussdString[ussdString.length - 1] = ussdString[ussdString.length - 1].slice(0, -1);
+        };
+        return session.get(msg.phone).then(function(data) {
+            if (!data) {
+                data = {system: {phone: msg.phone, backtrack: [], routes: {}}}
+            } else if (data.system.ussdString) {
+                var commands = data.system.ussdString;
+                commands.unshift(msg.message);
+                return when.iterate(function(data) {
+                    return ussd.route(data).then(function(data) {
+                        if (data.system.state == data.system.prevState) {
+                            commands.splice(1);
+                            return when.reject(data);
+                        } else {
+                            return data;
+                        }
+                    }).then(ussd.callController).then(function(data) {
+                        return ussd.render(data).then(function(result) {
+                            return session.set(data);
+                        });
                     });
-            })
-            .catch(function(errorMessage) {
-                return {
-                    shortMessage: errorMessage,
-                    sourceAddr: msg.phone
-                };
+                }, function(context) {// predicate
+                    data.system.message = commands.shift();
+                    if (!commands.length) {
+                        delete data.system.ussdString;
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }, function(context) { // handler
+                    // do nothing
+                }, data).then(ussd.route).then(ussd.callController).catch(function(err) {
+                    if (err.system) {
+                        return err;
+                    } else {
+                        return when.reject(data);
+                    }
+                });
+            }
+            if (ussdString) {
+                data.system.ussdString = ussdString;
+            }
+            data.system.message = msg.message;
+            return ussd.route(data).then(ussd.callController);
+        }).then(function(data) {
+            return ussd.render(data).then(function(result) {
+                return session.set(data).then(function(data) {
+                    return result;
+                });
             });
+        }).catch(function(err) {
+            return {
+                shortMessage: err,
+                sourceAddr: msg.phone
+            };
+        });
     }
 };
