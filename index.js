@@ -100,7 +100,12 @@ module.exports = {
             msg.message = '*' + ussdString.shift() + '#';
             ussdString.push(ussdString.pop().slice(0, -1)); // remove hash at the end of the last element
         };
-        return session.get(msg.phone).then(function(data) {
+        return session.get('globalConfig').then(function(globalConfig) {
+            if (globalConfig && globalConfig.maintenanceMode) {
+                throw config.maintenanceModeState ? {state: config.maintenanceModeState} : 'Maintenance mode.\nPlease try again later.';
+            }
+            return session.get(msg.phone);
+        }).then(function(data) {
             if (!data) {
                 data = {system: {phone: msg.phone, backtrack: [], routes: {}}}
             } else if (data.system.ussdString) {
@@ -150,6 +155,11 @@ module.exports = {
                     return result;
                 });
             });
+        }).catch(function(err) {
+            if (err.state) {
+                return ussd.render({system: {state: err.state}});
+            }
+            throw err;
         }).catch(function(err) {
             return {
                 shortMessage: err,
