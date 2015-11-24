@@ -1,13 +1,7 @@
-if you want to register to specific server ussd web handlers, you should put special configuration, for instance:
+Configuration options
 
 ```javascript
-//(dev|test|prod).json
-"ussd" : {
-  "registerRequestHandlers": ["server_a.registerRequestHandler", "server_b.registerRequestHandler"],
-  "initRoutes": true,
-  //.......
-}
-
+//configuration
+expireRule = 'refresh|static'//refresh: gets refreshed on every cycle;static(default): sets only once and will expire in predefined period of time (timeOut)
+timeOut = 1000 //expiration period definition
 ```
-
-based on this ussd config ussd module will try to register its ussd simulator handlers in server_a and server_b
