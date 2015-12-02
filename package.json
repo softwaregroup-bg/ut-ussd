@@ -6,11 +6,17 @@
     "sax": "~1.1.1",
     "lodash": "~3.10.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "ut-tools": "~0.5.1"
+  },
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
   },
   "description": "UT USSD module",
+  "scripts": {
+    "lint": "ut-lint .",
+    "test": "npm run lint"
+  },
   "repository": {
     "type": "git",
     "url": "git@git.softwaregroup-bg.com:ut5/ut-ussd.git"

@@ -1,13 +1,11 @@
 var when = require('when');
 var Path = require('path');
-var registerRequestHandlers;
 var session;
 var ussd;
 var config;
 
 module.exports = {
     init: function(bus) {
-        registerRequestHandlers = [];
         session = require('./lib/session')({bus: bus});
         ussd = require('./lib/ussd')({bus: bus});
         config = bus.config.ussd;
@@ -100,7 +98,9 @@ module.exports = {
         }
         return session.get('globalConfig').then(function(globalConfig) {
             if (globalConfig && globalConfig.maintenanceMode) {
-                throw config.maintenanceModeState ? {state: config.maintenanceModeState} : 'Maintenance mode.\nPlease try again later.';
+                var e = new Error('Maintenance mode.\nPlease try again later.');
+                e.state = config.maintenanceModeState;
+                throw e;
             }
             return session.get(msg.phone);
         }).then(function(data) {
@@ -124,7 +124,7 @@ module.exports = {
                             return session.set(data);
                         });
                     });
-                }, function() {// predicate
+                }, function() { // predicate
                     data.system.message = commands.shift();
                     if (!commands.length) {
                         delete data.system.ussdString;
