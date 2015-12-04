@@ -159,8 +159,9 @@ module.exports = {
             }
             throw err;
         }).catch(function(err) {
+            console.log('Error!!!', err);
             return {
-                shortMessage: err,
+                shortMessage: (err instanceof Error) ? err.message : (typeof err === 'string' ? err : 'System Error!'),
                 sourceAddr: msg.phone
             };
         });
