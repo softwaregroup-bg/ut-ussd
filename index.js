@@ -111,7 +111,7 @@ module.exports = {
                 commands.unshift(msg.message);
                 var i = 0; // iterration counter
                 return when.iterate(function(data) {
-                    return ussd.route(data).then(function(data) {
+                    return ussd.receive(data).then(ussd.route).then(function(data) {
                         if (i && data.system.state === data.system.prevState) {
                             // if states match and flow wasn't previously interrupted (i.e the code here should never execute for the first when.iterrate cycle)
                             commands.splice(1);
@@ -119,7 +119,7 @@ module.exports = {
                         } else {
                             return data;
                         }
-                    }).then(ussd.callController).then(function(data) {
+                    }).then(ussd.send).then(function(data) {
                         return ussd.render(data).then(function() {
                             return session.set(data);
                         });
@@ -134,7 +134,7 @@ module.exports = {
                     }
                 }, function() { // handler
                     i += 1;
-                }, data).then(ussd.route).then(ussd.callController).catch(function(err) {
+                }, data).then(ussd.receive).then(ussd.route).then(ussd.send).catch(function(err) {
                     if (err.system) {
                         return err;
                     } else {
@@ -146,7 +146,7 @@ module.exports = {
                 data.system.ussdString = ussdString;
             }
             data.system.message = msg.message;
-            return ussd.route(data).then(ussd.callController);
+            return ussd.receive(data).then(ussd.route).then(ussd.send);
         }).then(function(data) {
             return ussd.render(data).then(function(result) {
                 return session.set(data).then(function() {
