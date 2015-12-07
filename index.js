@@ -90,12 +90,6 @@ module.exports = {
         }]);
     },
     request: function(msg) {
-        var ussdString = null;
-        if ((config.strings || []).indexOf(msg.message) !== -1) { // ussd string
-            ussdString = msg.message.split('*').slice(1);
-            msg.message = '*' + ussdString.shift() + '#';
-            ussdString.push(ussdString.pop().slice(0, -1)); // remove hash at the end of the last element
-        }
         return session.get('globalConfig').then(function(globalConfig) {
             if (globalConfig && globalConfig.maintenanceMode) {
                 var e = new Error('Maintenance mode.\nPlease try again later.');
@@ -142,10 +136,12 @@ module.exports = {
                     }
                 });
             }
-            if (ussdString) {
-                data.system.ussdString = ussdString;
+            if (Array.isArray(config.strings) && ~config.strings.indexOf(msg.message)) { // ussd string
+                data.system.ussdString = msg.message.split(/[\*#]/).slice(1, -1);
+                data.system.message = '*' + data.system.ussdString.shift() + '#';
+            } else {
+                data.system.message = msg.message;
             }
-            data.system.message = msg.message;
             return ussd.receive(data).then(ussd.route).then(ussd.send);
         }).then(function(data) {
             return ussd.render(data).then(function(result) {
