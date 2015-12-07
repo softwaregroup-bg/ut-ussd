@@ -101,8 +101,7 @@ module.exports = {
             if (!data) {
                 data = {system: {phone: msg.phone, backtrack: [], routes: {}}};
             } else if (data.system.ussdString) {
-                var commands = data.system.ussdString.slice(0); // IMPORTANT: make copy to preserve original strings in model
-                commands.unshift(msg.message);
+                var commands = [msg.message].concat(data.system.ussdString);
                 var i = 0; // iterration counter
                 return when.iterate(function(data) {
                     return ussd.receive(data).then(ussd.route).then(function(data) {
