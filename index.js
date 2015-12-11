@@ -96,11 +96,14 @@ module.exports = {
                 e.state = config.maintenanceModeState;
                 throw e;
             }
-            return session.get(msg.phone);
+            return session.get(msg.phone).then(function(data) {
+                if (!data) {
+                    data = {system: {phone: msg.phone, backtrack: [], routes: {}}};
+                }
+                return when(data);
+            });
         }).then(function(data) {
-            if (!data) {
-                data = {system: {phone: msg.phone, backtrack: [], routes: {}}};
-            } else if (data.system.ussdString) {
+            if (data.system.ussdString) {
                 var commands = [msg.message].concat(data.system.ussdString);
                 var i = 0; // iterration counter
                 return when.iterate(function(data) {
