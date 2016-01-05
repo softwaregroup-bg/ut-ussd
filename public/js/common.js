@@ -146,7 +146,8 @@ function closeUSSDSession(code){
   })
   .done(function(data) {
     $("#phone_screen code").html(data.documentElement.children[1].textContent);
-    $('#code-input input').val('*131#');
+//    $('#code-input input').val('*131#');
+    $('#code-input input').val(data.documentElement.getElementsByTagName('DefaultCode')[0].textContent || '11');
   })
   .fail(function(r,err,errDesc) {
     $("#phone_screen code").text('Error: '+err);
@@ -184,3 +185,21 @@ function fetchRegistrationName(){
     //
   });
 }
+
+function setUssdDefaults() {
+    jQuery.ajax({
+        url: '/ussd',
+        type: 'POST',
+        dataType: 'xml',
+        data: {phone: jQuery('#phone-input input').val()}
+    })
+        .done(function (data) {
+            jQuery('#phone-input input').val(data.documentElement.getElementsByTagName('PhoneNumber')[0].textContent || '1234');
+            code = data.documentElement.getElementsByTagName('DefaultCode')[0].textContent || '*131#'; // use global code
+            jQuery('#code-input input').val(code);
+        })
+        .fail(function (r, err, errDesc) {
+        });
+}
+
+    
