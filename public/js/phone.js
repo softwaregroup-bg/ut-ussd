@@ -9,6 +9,7 @@ var phone;
     this.altModeOn = false;
     this.btnClickTimeout = null;
     this.lastClickedButton = null;
+    this.isInUSSD = false;
   }
 
   Phone.prototype.fetchButtons = function Phone__fetchButtons(btnArr){
