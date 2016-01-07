@@ -100,6 +100,10 @@ module.exports = {
                 if (!data) {
                     data = {system: {phone: msg.phone, backtrack: [], routes: {}}};
                 }
+                delete data.system.newSession;
+                if(msg.newSession) {
+                    data.system.newSession = true;
+                }
                 return when(data);
             });
         }).then(function(data) {
