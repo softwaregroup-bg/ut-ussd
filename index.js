@@ -3,7 +3,11 @@ var Path = require('path');
 var session;
 var ussd;
 var config;
-
+function getExpirationTime(timeout) {
+    var d = new Date();
+    d.setTime(d.getTime() + (config.timeout || 300) * 1000); // 5 minutes default
+    return d.toLocaleString();
+}
 module.exports = {
     init: function(bus) {
         session = require('./lib/session')({bus: bus});
@@ -97,12 +101,25 @@ module.exports = {
                 throw e;
             }
             return session.get(msg.phone).then(function(data) {
-                if (!data) {
-                    data = {system: {phone: msg.phone, backtrack: [], routes: {}}};
+                if (!data) { // no session
+                    data = {
+                        system: {
+                            expire: getExpirationTime(),
+                            phone: msg.phone,
+                            backtrack: [],
+                            routes: {}
+                        }
+                    };
+                } else if (new Date(data.system.expire) < new Date()) { // session expired
+                    data.system.resume = true;
+                    data.system.expire = getExpirationTime();
+                } else if (config.expireRule === 'refresh') {
+                    data.system.expire = getExpirationTime();
                 }
-                delete data.system.newSession;
-                if(msg.newSession) {
-                    data.system.newSession = true;
+                if (msg.newSession) {
+                    data.system.newSession = msg.newSession;
+                } else {
+                    delete data.system.newSession;
                 }
                 return when(data);
             });
