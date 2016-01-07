@@ -83,6 +83,9 @@ function ussdRequest(button,destination,phoneInput,dataCollection){
 
   this.doRequest = function doRequest(){
     var _self = this;
+    if(!phone.isInUSSD) {
+      this.data.newSession = true;
+    }
     jQuery.ajax({
       url: '/ussd',
       type: 'POST',
@@ -93,6 +96,7 @@ function ussdRequest(button,destination,phoneInput,dataCollection){
       _self.enableButton();
     })
     .done(function(data) {
+      phone.isInUSSD = true;
       _self.enableButton();
       var _div = jQuery('<div/>');
       _div.append(data.documentElement);
@@ -148,6 +152,7 @@ function closeUSSDSession(code){
     $("#phone_screen code").html(data.documentElement.children[1].textContent);
 //    $('#code-input input').val('*131#');
     $('#code-input input').val(data.documentElement.getElementsByTagName('DefaultCode')[0].textContent || '11');
+    phone.isInUSSD = false;
   })
   .fail(function(r,err,errDesc) {
     $("#phone_screen code").text('Error: '+err);
