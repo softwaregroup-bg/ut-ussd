@@ -193,10 +193,10 @@ function fetchRegistrationName(){
 
 function setUssdDefaults() {
     jQuery.ajax({
-        url: '/ussd',
+        url: '/getUssdConfig',
         type: 'POST',
         dataType: 'xml',
-        data: {phone: jQuery('#phone-input input').val()}
+        data: {}
     })
         .done(function (data) {
             jQuery('#phone-input input').val(data.documentElement.getElementsByTagName('PhoneNumber')[0].textContent || '1234');

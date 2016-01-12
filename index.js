@@ -76,6 +76,21 @@ module.exports = {
             }
         }, {
             method: 'POST',
+            path: '/getUssdConfig',
+            handler: function(request, reply) {
+                reply(
+                    '<UssdResponse version="1.0">' +
+                        '<DefaultCode>' +
+                            ussdConfig.defaultCode +
+                        '</DefaultCode>' +
+                        '<PhoneNumber>' +
+                            ussdConfig.phoneNumber +
+                        '</PhoneNumber>' +
+                   '</UssdResponse>'
+                );
+            }
+        }, {
+            method: 'POST',
             path: '/closeUSSDSession',
             handler: function(request, reply) {
                 session.del(request.payload.phone)
