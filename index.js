@@ -81,10 +81,10 @@ module.exports = {
                 reply(
                     '<UssdResponse version="1.0">' +
                         '<DefaultCode>' +
-                            ussdConfig.defaultCode +
+                            config.defaultCode +
                         '</DefaultCode>' +
                         '<PhoneNumber>' +
-                            ussdConfig.phoneNumber +
+                            config.phoneNumber +
                         '</PhoneNumber>' +
                    '</UssdResponse>'
                 );
