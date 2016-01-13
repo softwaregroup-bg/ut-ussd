@@ -1,5 +1,8 @@
 var when = require('when');
 var Path = require('path');
+var _ = {
+    defaults: require('lodash/object/defaults')
+};
 var session;
 var ussd;
 var config;
@@ -10,12 +13,15 @@ function getExpirationTime(timeout) {
 }
 module.exports = {
     init: function(bus) {
+        var config = _.defaults(bus.config.ussd || {}, {
+            shortcodes: {},
+            defaultShortCode: '*123#',
+            defaultPhone: '1234'
+        });
         session = require('./lib/session')({bus: bus});
-        ussd = require('./lib/ussd')({bus: bus});
-        config = bus.config.ussd;
+        ussd = require('./lib/ussd')({bus: bus, config: config});
     },
     start: function() {
-        console.log(this.config.id);
         this && this.registerRequestHandler && this.registerRequestHandler([{
             method: 'GET',
             path: '/ussd/{p*}',
@@ -81,10 +87,10 @@ module.exports = {
                 reply(
                     '<UssdResponse version="1.0">' +
                         '<DefaultCode>' +
-                            (config.defaultCode || config.defaultShortCode || '*123#') +
+                            config.defaultShortCode +
                         '</DefaultCode>' +
                         '<PhoneNumber>' +
-                            (config.phoneNumber || config.defaultPhoneNumber || '1234') +
+                            config.defaultPhone +
                         '</PhoneNumber>' +
                    '</UssdResponse>'
                 );
