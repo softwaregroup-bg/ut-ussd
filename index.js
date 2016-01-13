@@ -13,7 +13,7 @@ function getExpirationTime(timeout) {
 }
 module.exports = {
     init: function(bus) {
-        var config = _.defaults(bus.config.ussd || {}, {
+        config = _.defaults(bus.config.ussd || {}, {
             shortcodes: {},
             defaultShortCode: '*123#',
             defaultPhone: '1234'
