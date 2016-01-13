@@ -6,9 +6,9 @@ var _ = {
 var session;
 var ussd;
 var config;
-function getExpirationTime(timeout) {
+function getExpirationTime() {
     var d = new Date();
-    d.setTime(d.getTime() + (config.timeout || 300) * 1000); // 5 minutes default
+    d.setTime(d.getTime() + (config.timeOut || 300) * 1000); // 5 minutes default
     return d.toLocaleString();
 }
 module.exports = {
