@@ -158,11 +158,6 @@ module.exports = {
                 return ussd.render({system: {state: err.state}});
             }
             throw err;
-        }).catch(function(err) {
-            return {
-                shortMessage: err,
-                sourceAddr: msg.phone
-            };
         });
     }
 };
