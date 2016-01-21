@@ -199,11 +199,13 @@ module.exports = {
             }
             throw err;
         }).catch(function(err) {
-            console.log('Error!!!', err);
-            return {
-                shortMessage: (err instanceof Error) ? err.message : (typeof err === 'string' ? err : 'System Error!'),
-                sourceAddr: msg.phone
-            };
+            if (config.debug) {
+                return {
+                    shortMessage: (err instanceof Error) ? err.message : (typeof err === 'string' ? err : 'System Error!'),
+                    sourceAddr: msg.phone
+                };
+            }
+            throw err;
         });
     }
 };
