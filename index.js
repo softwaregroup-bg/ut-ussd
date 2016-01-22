@@ -195,7 +195,13 @@ module.exports = {
             });
         }).catch(function(err) {
             if (err.state) {
-                return ussd.render({system: {state: err.state}});
+                return ussd.send({
+                    system: {
+                        state: err.state,
+                        phone: msg.phone,
+                        message: msg.message
+                    }
+                }).then(ussd.render);
             }
             throw err;
         }).catch(function(err) {
