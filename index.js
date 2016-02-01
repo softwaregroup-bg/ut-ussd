@@ -180,7 +180,7 @@ module.exports = {
                     }
                 });
             }
-            if (Array.isArray(config.strings) && ~config.strings.indexOf(msg.message)) { // ussd string
+            if (!data.system.state && Array.isArray(config.strings) && ~config.strings.indexOf(msg.message)) { // ussd string
                 data.system.ussdString = msg.message.split(/[\*#]/).slice(1, -1);
                 data.system.message = '*' + data.system.ussdString.shift() + '#';
             } else {
