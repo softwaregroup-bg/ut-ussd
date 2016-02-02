@@ -159,17 +159,13 @@ module.exports = {
                         }
                     }).then(ussd.send).then(function(data) {
                         return ussd.render(data).then(function() {
+                            delete data.system.ussdString;
                             return session.set(data);
                         });
                     });
                 }, function() { // predicate
                     data.system.message = commands.shift();
-                    if (!commands.length) {
-                        delete data.system.ussdString;
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return !commands.length;
                 }, function() { // handler
                     i += 1;
                 }, data).then(ussd.receive).then(ussd.route).then(ussd.send).catch(function(err) {
