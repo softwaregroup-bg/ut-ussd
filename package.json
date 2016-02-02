@@ -15,7 +15,10 @@
   "description": "UT USSD module",
   "scripts": {
     "lint": "ut-lint .",
-    "test": "npm run lint"
+    "pre-commit": "npm run lint",
+    "pre-release": "ut-pre-release",
+    "release": "ut-release",
+    "post-release": "ut-post-release"
   },
   "repository": {
     "type": "git",
