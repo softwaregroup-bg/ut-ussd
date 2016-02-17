@@ -163,7 +163,7 @@ module.exports = {
                             return session.set(data);
                         });
                     });
-                }, function() { // predicate
+                }, function(data) { // predicate
                     data.system.message = commands.shift();
                     return !commands.length;
                 }, function() { // handler
