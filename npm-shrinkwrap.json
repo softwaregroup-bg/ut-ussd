@@ -1,6 +1,6 @@
 {
   "name": "ut-ussd",
-  "version": "5.5.7",
+  "version": "5.5.8",
   "dependencies": {
     "align-text": {
       "version": "0.1.4",
