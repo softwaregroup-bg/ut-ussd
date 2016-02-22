@@ -122,7 +122,7 @@ module.exports = {
                 throw e;
             }
             return session.get(msg.phone).then(function(data) {
-                if (!data) { // no session
+                if (!data || msg.newSession) { // no session
                     data = {
                         system: {
                             expire: getExpirationTime(),
