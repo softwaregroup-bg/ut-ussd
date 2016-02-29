@@ -35,7 +35,7 @@ body{
   top: 10px;
   width: 100%;
   height: 600px;
-  background: url('../img/nokia101_300x600.jpg') no-repeat top left;
+  background: url('../img/nokia101_300x600.png') no-repeat top left;
 }
 
 #screen{
@@ -225,4 +225,9 @@ code {
 
 #buttonsWrapper .phoneBtn.row4{
   top: 116px;
+}
+
+/*Loader*/
+#phone #screen .loading {
+    background: url('../img/loading.gif') no-repeat center center #FFF;
 }

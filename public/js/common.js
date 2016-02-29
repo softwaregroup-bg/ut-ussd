@@ -1,48 +1,4 @@
-/*function init(){
-  var _init = this;
-  this.clockStartTime = false;
-
-  this.clock = function(holder){
-
-    var fixTime = function(item){
-      return item < 10 ? '0'+item : item;
-    };
-
-    var getTime = function(separator){
-      var d = new Date();
-      var ar = [];
-      separator = (!separator?':':separator);
-
-      ar.push(fixTime(d.getHours()));
-      ar.push(fixTime(d.getMinutes()));
-      ar.push(fixTime(d.getSeconds()));
-      return ar.join(separator);
-    };
-
-    var refreshTime = function(){
-      setTimeout(function(){
-        holder.text(getTime());
-        refreshTime();
-      }, 200);
-    };
-
-    holder.text(getTime());
-    refreshTime();
-    holder.on('click',function(){
-      if(!_init.clockStartTime){
-        _init.clockStartTime = (new Date()).getTime();
-        holder.addClass('started');
-      } else {
-        var diff = (new Date()).getTime()-_init.clockStartTime;
-        holder.removeClass('started');
-        _init.clockStartTime=false;
-        alert('Time: '+(diff/1000)+'s');
-      }
-    });
-  };
-};*/
-
-function ussdRequest(button,destination,phoneInput,dataCollection){
+function ussdRequest(button, destination, phoneInput, dataCollection) {
   this.data = {};
 
   // clock control
@@ -81,11 +37,12 @@ function ussdRequest(button,destination,phoneInput,dataCollection){
     return (_collections?true:false);
   };
 
-  this.doRequest = function doRequest(){
+  this.doRequest = function doRequest() {
     var _self = this;
     if(!phone.isInUSSD) {
       this.data.newSession = true;
     }
+    phone.startLoading();
     jQuery.ajax({
       url: '/ussd',
       type: 'POST',
@@ -93,6 +50,7 @@ function ussdRequest(button,destination,phoneInput,dataCollection){
       data: this.data
     })
     .always(function(){
+       phone.stopLoading();
       _self.enableButton();
     })
     .done(function(data) {
