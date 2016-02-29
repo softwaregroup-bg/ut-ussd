@@ -151,7 +151,7 @@ module.exports = {
                 return when.iterate(function(data) {
                     return ussd.receive(data).then(ussd.route).then(function(data) {
                         if (i && data.system.state === data.system.prevState) {
-                            // if states match and flow wasn't previously interrupted (i.e the code here should never execute for the first when.iterrate cycle)
+                            // if states match and flow wasn't previously interrupted (i.e the code here should never execute for the first when.iterate cycle)
                             commands.splice(1);
                             return when.reject(data);
                         } else {
