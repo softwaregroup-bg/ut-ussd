@@ -1,13 +1,13 @@
 {
   "name": "ut-ussd",
-  "version": "5.5.9",
+  "version": "5.5.10",
   "dependencies": {
     "when": "~3.7.2",
     "sax": "~1.1.1",
     "lodash": "~3.10.1"
   },
   "devDependencies": {
-    "ut-tools": "~0.5.1"
+    "ut-tools": "~1.0.0"
   },
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
