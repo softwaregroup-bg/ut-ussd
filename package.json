@@ -2,9 +2,9 @@
   "name": "ut-ussd",
   "version": "5.5.12",
   "dependencies": {
-    "when": "~3.7.2",
-    "sax": "~1.1.1",
-    "lodash": "~3.10.1"
+    "when": "3.7.7",
+    "sax": "1.1.1",
+    "lodash": "3.10.1"
   },
   "devDependencies": {
     "ut-tools": "^5.3.1"
