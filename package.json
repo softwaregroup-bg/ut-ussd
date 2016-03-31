@@ -1,6 +1,6 @@
 {
   "name": "ut-ussd",
-  "version": "5.5.12",
+  "version": "5.5.13",
   "dependencies": {
     "when": "3.7.7",
     "sax": "1.1.1",
