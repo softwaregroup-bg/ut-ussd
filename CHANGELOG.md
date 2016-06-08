@@ -1,3 +1,13 @@
+<a name="5.5.15"></a>
+## [5.5.15](https://git.softwaregroup-bg.com/ut5/ut-ussd/compare/v5.5.14...v5.5.15) (2016-06-08)
+
+
+### Bug Fixes
+
+* upgrade lodash ([1a4b644](https://git.softwaregroup-bg.com/ut5/ut-ussd/commit/1a4b644))
+
+
+
 <a name="5.5.14"></a>
 ## [5.5.14](https://git.softwaregroup-bg.com/ut5/ut-ussd/compare/v5.5.13...v5.5.14) (2016-04-15)
 
