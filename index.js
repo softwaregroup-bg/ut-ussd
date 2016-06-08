@@ -1,7 +1,7 @@
 var when = require('when');
 var Path = require('path');
 var _ = {
-    defaults: require('lodash/object/defaults')
+    defaults: require('lodash.defaults')
 };
 var session;
 var ussd;
