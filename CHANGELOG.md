@@ -1,3 +1,13 @@
+<a name="5.5.17"></a>
+## [5.5.17](https://git.softwaregroup-bg.com/ut5/ut-ussd/compare/v5.5.16...v5.5.17) (2016-07-11)
+
+
+### Features
+
+* upgrade dependencies ([3be4d75](https://git.softwaregroup-bg.com/ut5/ut-ussd/commit/3be4d75))
+
+
+
 <a name="5.5.16"></a>
 ## [5.5.16](https://git.softwaregroup-bg.com/ut5/ut-ussd/compare/v5.5.15...v5.5.16) (2016-06-16)
 
