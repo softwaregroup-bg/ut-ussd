@@ -7,11 +7,11 @@
     "lodash.defaults": "4.0.1",
     "lodash.isfunction": "3.0.8",
     "lodash.isobject": "3.0.2",
-    "sax": "1.1.1",
+    "sax": "1.2.1",
     "when": "3.7.7"
   },
   "devDependencies": {
-    "ut-tools": "^5.3.13"
+    "ut-tools": "^5.4.1"
   },
   "publishConfig": {
     "registry": "https://nexus.softwaregroup-bg.com/repository/npm-internal"
