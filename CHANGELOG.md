@@ -1,3 +1,8 @@
+<a name="5.5.19"></a>
+## [5.5.19](https://git.softwaregroup-bg.com/ut5/ut-ussd/compare/v5.5.18...v5.5.19) (2016-08-02)
+
+
+
 <a name="5.5.18"></a>
 ## [5.5.18](https://git.softwaregroup-bg.com/ut5/ut-ussd/compare/v5.5.17...v5.5.18) (2016-07-23)
 
