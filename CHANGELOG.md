@@ -1,3 +1,13 @@
+<a name="5.5.20"></a>
+## [5.5.20](https://github.com/softwaregroup-bg/ut-ussd/compare/v5.5.19...v5.5.20) (2016-08-12)
+
+
+### Bug Fixes
+
+* publish to npm ([4dd2600](https://github.com/softwaregroup-bg/ut-ussd/commit/4dd2600))
+
+
+
 <a name="5.5.19"></a>
 ## [5.5.19](https://git.softwaregroup-bg.com/ut5/ut-ussd/compare/v5.5.18...v5.5.19) (2016-08-02)
 
