@@ -1,3 +1,18 @@
+<a name="6.0.0"></a>
+# [6.0.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v5.5.20...v6.0.0) (2016-08-16)
+
+
+### Features
+
+* update sessionDB to use promises instead of flat API ([e4b68d0](https://github.com/softwaregroup-bg/ut-ussd/commit/e4b68d0))
+
+
+### BREAKING CHANGES
+
+* this module will not work with the older versions of ut-bus
+
+
+
 <a name="5.5.20"></a>
 ## [5.5.20](https://github.com/softwaregroup-bg/ut-ussd/compare/v5.5.19...v5.5.20) (2016-08-12)
 
