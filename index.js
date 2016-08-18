@@ -1,11 +1,28 @@
 var when = require('when');
 var Path = require('path');
 var _ = {
-    defaults: require('lodash.defaults')
+    merge: require('lodash.merge')
 };
 var session;
 var ussd;
-var config;
+var config = {
+    shortcodes: {},
+    defaultShortCode: '*123#',
+    defaultPhone: '123456789',
+    routes: {
+        common: { // applies for all routes
+            config: {
+                auth: false
+            }
+        },
+        public: {}, // to access the public resources
+        session: {}, // for remote access to the whole session object
+        sessionKey: {}, // for remote access to a single record from the session object
+        ussd: {}, // to call the ussd api remotely
+        config: {}, // to obtain information about ussd simulator's default phone and shortcode
+        closeSession: {} // to close ussd session
+    }
+};
 function getExpirationTime() {
     var d = new Date();
     d.setTime(d.getTime() + (config.timeOut || 300) * 1000); // 5 minutes default
@@ -13,106 +30,109 @@ function getExpirationTime() {
 }
 module.exports = {
     init: function(bus) {
-        config = _.defaults(bus.config.ussd || {}, {
-            shortcodes: {},
-            defaultShortCode: '*123#',
-            defaultPhone: '1234'
-        });
+        _.merge(config, bus.config.ussd || {});
         session = require('./lib/session')({bus: bus});
         ussd = require('./lib/ussd')({bus: bus, config: config});
     },
     start: function() {
-        this && this.registerRequestHandler && this.registerRequestHandler([{
-            method: 'GET',
-            path: '/ussd/{p*}',
-            handler: {
-                directory: {
-                    path: Path.join(__dirname, 'public'),
-                    listing: false,
-                    index: true
+        this && this.registerRequestHandler && this.registerRequestHandler([
+            _.merge({}, config.routes.common, config.routes.public, {
+                method: 'GET',
+                path: '/ussd/{p*}',
+                handler: {
+                    directory: {
+                        path: Path.join(__dirname, 'public'),
+                        listing: false,
+                        index: true
+                    }
                 }
-            }
-        }, {
-            method: 'GET',
-            path: '/ussd/session',
-            handler: function(request, reply) {
-                session.get()
-                    .then(function(data) {
-                        var response = '';
-                        if (!data) {
-                            response = 'db empty';
-                        } else {
-                            data.forEach(function(record) {
-                                response += '<div style="border-bottom: 1px dashed grey; padding: 20px">' +
-                                    record.key + ': ' + JSON.stringify(record.value, null, 4) +
-                                    '</div>';
-                            });
-                        }
-                        reply('<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
-                            response +
-                            '</span>');
-                    })
-                    .done();
-            }
-        }, {
-            method: 'GET',
-            path: '/ussd/session/{key}',
-            handler: function(request, reply) {
-                session.get(request.params.key)
-                    .then(function(value) {
-                        if (!value) {
-                            reply('no session data');
-                        } else {
+            }),
+            _.merge({}, config.routes.common, config.routes.session, {
+                method: 'GET',
+                path: '/ussd/session',
+                handler: function(request, reply) {
+                    session.get()
+                        .then(function(data) {
+                            var response = '';
+                            if (!data) {
+                                response = 'db empty';
+                            } else {
+                                data.forEach(function(record) {
+                                    response += '<div style="border-bottom: 1px dashed grey; padding: 20px">' +
+                                        record.key + ': ' + JSON.stringify(record.value, null, 4) +
+                                        '</div>';
+                                });
+                            }
                             reply('<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
-                                JSON.stringify(value, null, 4) +
+                                response +
                                 '</span>');
-                        }
-                    })
-                    .done();
-            }
-        }, {
-            method: 'POST',
-            path: '/ussd',
-            handler: function(request, reply) {
-                module.exports.request(request.payload)
-                    .then(function(data) {
-                        reply(ussd.buildResponse(data));
-                    })
-                    .done();
-            }
-        }, {
-            method: 'POST',
-            path: '/getUssdConfig',
-            handler: function(request, reply) {
-                reply(
-                    '<UssdResponse version="1.0">' +
-                        '<DefaultCode>' +
-                            config.defaultShortCode +
-                        '</DefaultCode>' +
-                        '<PhoneNumber>' +
-                            config.defaultPhone +
-                        '</PhoneNumber>' +
-                   '</UssdResponse>'
-                );
-            }
-        }, {
-            method: 'POST',
-            path: '/closeUSSDSession',
-            handler: function(request, reply) {
-                session.del(request.payload.phone)
-                    .then(function() {
-                        reply(ussd.buildResponse({
-                            shortMessage: 'Session Closed'
-                        }));
-                    })
-                    .catch(function() {
-                        reply(ussd.buildResponse({
-                            shortMessage: 'error occurred when deleting the session data'
-                        }));
-                    })
-                    .done();
-            }
-        }]);
+                        })
+                        .done();
+                }
+            }),
+            _.merge({}, config.routes.common, config.routes.sessionKey, {
+                method: 'GET',
+                path: '/ussd/session/{key}',
+                handler: function(request, reply) {
+                    session.get(request.params.key)
+                        .then(function(value) {
+                            if (!value) {
+                                reply('no session data');
+                            } else {
+                                reply('<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
+                                    JSON.stringify(value, null, 4) +
+                                    '</span>');
+                            }
+                        })
+                        .done();
+                }
+            }),
+            _.merge({}, config.routes.common, config.routes.ussd, {
+                method: 'POST',
+                path: '/ussd',
+                handler: function(request, reply) {
+                    module.exports.request(request.payload)
+                        .then(function(data) {
+                            reply(ussd.buildResponse(data));
+                        })
+                        .done();
+                }
+            }),
+            _.merge({}, config.routes.common, config.routes.config, {
+                method: 'POST',
+                path: '/getUssdConfig',
+                handler: function(request, reply) {
+                    reply(
+                        '<UssdResponse version="1.0">' +
+                            '<DefaultCode>' +
+                                config.defaultShortCode +
+                            '</DefaultCode>' +
+                            '<PhoneNumber>' +
+                                config.defaultPhone +
+                            '</PhoneNumber>' +
+                    '</UssdResponse>'
+                    );
+                }
+            }),
+            _.merge({}, config.routes.common, config.routes.closeSession, {
+                method: 'POST',
+                path: '/closeUSSDSession',
+                handler: function(request, reply) {
+                    session.del(request.payload.phone)
+                        .then(function() {
+                            reply(ussd.buildResponse({
+                                shortMessage: 'Session Closed'
+                            }));
+                        })
+                        .catch(function() {
+                            reply(ussd.buildResponse({
+                                shortMessage: 'error occurred when deleting the session data'
+                            }));
+                        })
+                        .done();
+                }
+            })
+        ]);
     },
     request: function(msg) {
         return session.get('globalConfig').then(function(globalConfig) {
