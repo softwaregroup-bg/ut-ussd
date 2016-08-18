@@ -1,3 +1,13 @@
+<a name="6.1.0"></a>
+# [6.1.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.0.0...v6.1.0) (2016-08-18)
+
+
+### Features
+
+* add possibility to pass configuration for ussd simulator routes ([cf9d7ab](https://github.com/softwaregroup-bg/ut-ussd/commit/cf9d7ab))
+
+
+
 <a name="6.0.0"></a>
 # [6.0.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v5.5.20...v6.0.0) (2016-08-16)
 
