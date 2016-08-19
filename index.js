@@ -30,12 +30,14 @@ function getExpirationTime() {
 }
 module.exports = {
     init: function(bus) {
-        _.merge(config, bus.config.ussd || {});
+        if (bus.config.ussd) {
+            _.merge(config, bus.config.ussd);
+        }
         session = require('./lib/session')({bus: bus});
         ussd = require('./lib/ussd')({bus: bus, config: config});
     },
     start: function() {
-        this && this.registerRequestHandler && this.registerRequestHandler([
+        this.registerRequestHandler && this.registerRequestHandler([
             _.merge({}, config.routes.common, config.routes.public, {
                 method: 'GET',
                 path: '/ussd/{p*}',

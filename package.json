@@ -8,7 +8,8 @@
     "lodash.isobject": "3.0.2",
     "lodash.merge": "4.4.0",
     "sax": "1.2.1",
-    "when": "3.7.7"
+    "when": "3.7.7",
+    "joi": "9.0.0"
   },
   "devDependencies": {
     "ut-tools": "^5.8.0"
