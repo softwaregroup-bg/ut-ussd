@@ -1,3 +1,13 @@
+<a name="6.3.0"></a>
+# [6.3.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.2.0...v6.3.0) (2016-08-26)
+
+
+### Features
+
+* ussd debug mode ([c69737c](https://github.com/softwaregroup-bg/ut-ussd/commit/c69737c))
+
+
+
 <a name="6.2.0"></a>
 # [6.2.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.1.0...v6.2.0) (2016-08-19)
 
