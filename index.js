@@ -30,9 +30,7 @@ function getExpirationTime() {
 }
 module.exports = {
     init: function(bus) {
-        if (bus.config.ussd) {
-            _.merge(config, bus.config.ussd);
-        }
+        _.merge(config, bus.config.ussd || {}, {debug: bus.config.debug});
         session = require('./lib/session')({bus: bus});
         ussd = require('./lib/ussd')({bus: bus, config: config});
     },
@@ -208,6 +206,9 @@ module.exports = {
         }).then(function(data) {
             return ussd.render(data).then(function(result) {
                 return session.set(data).then(function() {
+                    if (config.debug) {
+                        result.debug = data;
+                    }
                     return result;
                 });
             });
