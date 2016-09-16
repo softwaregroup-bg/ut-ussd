@@ -28,8 +28,13 @@ function getExpirationTime() {
     d.setTime(d.getTime() + (config.timeOut || 300) * 1000); // 5 minutes default
     return d.toLocaleString();
 }
-module.exports = {
+var ussdModule = {
+    config: function(c) {
+        _.merge(config, c);
+        return ussdModule;
+    },
     init: function(bus) {
+        delete ussdModule.config;
         _.merge(config, bus.config.ussd || {}, {debug: bus.config.debug});
         session = require('./lib/session')({bus: bus});
         ussd = require('./lib/ussd')({bus: bus, config: config});
@@ -234,3 +239,5 @@ module.exports = {
         });
     }
 };
+
+module.exports = ussdModule;
