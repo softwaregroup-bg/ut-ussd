@@ -1,3 +1,13 @@
+<a name="6.4.0"></a>
+# [6.4.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.3.0...v6.4.0) (2016-09-16)
+
+
+### Features
+
+* add possibility to manually configure ussd port ([000860c](https://github.com/softwaregroup-bg/ut-ussd/commit/000860c))
+
+
+
 <a name="6.3.0"></a>
 # [6.3.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.2.0...v6.3.0) (2016-08-26)
 
