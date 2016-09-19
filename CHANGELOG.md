@@ -1,3 +1,13 @@
+<a name="6.5.0"></a>
+# [6.5.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.4.0...v6.5.0) (2016-09-19)
+
+
+### Features
+
+* integrate with identity.get ([ee2795c](https://github.com/softwaregroup-bg/ut-ussd/commit/ee2795c))
+
+
+
 <a name="6.4.0"></a>
 # [6.4.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.3.0...v6.4.0) (2016-09-16)
 
