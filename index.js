@@ -9,6 +9,7 @@ var config = {
     shortcodes: {},
     defaultShortCode: '*123#',
     defaultPhone: '123456789',
+    identity: true,
     routes: {
         common: { // applies for all routes
             config: {
@@ -23,6 +24,8 @@ var config = {
         closeSession: {} // to close ussd session
     }
 };
+var identity;
+
 function getExpirationTime() {
     var d = new Date();
     d.setTime(d.getTime() + (config.timeOut || 300) * 1000); // 5 minutes default
@@ -38,6 +41,9 @@ var ussdModule = {
         _.merge(config, bus.config.ussd || {}, {debug: bus.config.debug});
         session = require('./lib/session')({bus: bus});
         ussd = require('./lib/ussd')({bus: bus, config: config});
+        if (config.identity) {
+            identity = bus.importMethod('identity.get');
+        }
     },
     start: function() {
         this.registerRequestHandler && this.registerRequestHandler([
@@ -148,26 +154,44 @@ var ussdModule = {
             }
             return session.get(msg.phone).then(function(data) {
                 if (!data || msg.newSession) { // no session
-                    data = {
-                        system: {
-                            expire: getExpirationTime(),
-                            phone: msg.phone,
-                            backtrack: [],
-                            routes: {}
-                        }
-                    };
+                    if (identity) {
+                        data = identity({
+                            userName: msg.phone,
+                            type: 'ussd'
+                        }).then(function(auth) {
+                            return {
+                                system: {
+                                    expire: getExpirationTime(),
+                                    phone: msg.phone,
+                                    backtrack: [],
+                                    routes: {},
+                                    meta: {
+                                        auth: auth
+                                    },
+                                    newSession: msg.newSession
+                                }
+                            };
+                        });
+                    } else {
+                        data = {
+                            system: {
+                                expire: getExpirationTime(),
+                                phone: msg.phone,
+                                backtrack: [],
+                                routes: {},
+                                newSession: msg.newSession
+                            }
+                        };
+                    }
                 } else if (new Date(data.system.expire) < new Date()) { // session expired
                     data.system.resume = true;
                     data.system.expire = getExpirationTime();
+                    delete data.system.newSession;
                 } else if (config.expireRule === 'refresh') {
                     data.system.expire = getExpirationTime();
-                }
-                if (msg.newSession) {
-                    data.system.newSession = msg.newSession;
-                } else {
                     delete data.system.newSession;
                 }
-                return when(data);
+                return data;
             });
         }).then(function(data) {
             if (data.system.ussdString) {
