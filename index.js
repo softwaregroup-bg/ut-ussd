@@ -156,7 +156,7 @@ var ussdModule = {
                 if (!data || msg.newSession) { // no session
                     if (identity) {
                         data = identity({
-                            userName: msg.phone,
+                            username: msg.phone,
                             type: 'ussd'
                         }).then(function(auth) {
                             return {
