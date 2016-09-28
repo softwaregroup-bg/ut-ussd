@@ -1,6 +1,6 @@
 {
   "name": "ut-ussd",
-  "version": "6.5.1",
+  "version": "6.5.2",
   "dependencies": {
     "ut-template": "^5.4.4",
     "lodash.clonedeep": "4.3.2",
