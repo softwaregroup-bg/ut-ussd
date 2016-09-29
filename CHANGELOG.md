@@ -1,3 +1,8 @@
+<a name="6.5.4"></a>
+## [6.5.4](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.5.3...v6.5.4) (2016-09-29)
+
+
+
 <a name="6.5.3"></a>
 ## [6.5.3](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.5.2...v6.5.3) (2016-09-29)
 
