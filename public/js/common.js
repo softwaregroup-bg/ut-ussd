@@ -31,9 +31,9 @@ function ussdRequest(button, destination, phoneInput, dataCollection) {
     });
 
     this.data = _collections;
-    
+
     jQuery('[name="message"]')[0].value = ''
-    	
+
     return (_collections?true:false);
   };
 
@@ -119,7 +119,7 @@ function closeUSSDSession(code){
 
 function backspace(){
   var el = jQuery('#code-input input');
-  var val = el.val(); 
+  var val = el.val();
   el.val(val.substring(0, val.length - 1))
 }
 
@@ -157,7 +157,7 @@ function setUssdDefaults() {
         data: {}
     })
         .done(function (data) {
-            jQuery('#phone-input input').val(data.documentElement.getElementsByTagName('PhoneNumber')[0].textContent || '1234');
+            jQuery('#phone-input input').val(data.documentElement.getElementsByTagName('PhoneNumber')[0].textContent );
             code = data.documentElement.getElementsByTagName('DefaultCode')[0].textContent || '*131#'; // use global code
             jQuery('#code-input input').val(code);
         })
@@ -165,4 +165,4 @@ function setUssdDefaults() {
         });
 }
 
-    
+
