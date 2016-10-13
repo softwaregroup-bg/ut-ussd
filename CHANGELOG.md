@@ -1,3 +1,13 @@
+<a name="6.5.5"></a>
+## [6.5.5](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.5.4...v6.5.5) (2016-10-13)
+
+
+### Bug Fixes
+
+* clear message right after hiding the message box in ussd simulator ([a72c544](https://github.com/softwaregroup-bg/ut-ussd/commit/a72c544))
+
+
+
 <a name="6.5.4"></a>
 ## [6.5.4](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.5.3...v6.5.4) (2016-09-29)
 
