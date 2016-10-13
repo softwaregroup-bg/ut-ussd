@@ -46,7 +46,7 @@ var phone;
         pane.fadeIn(500, function() {
             setTimeout(function() {
                 pane.fadeOut(500, function() {
-                    pane.text();
+                    pane.text('');
                 });
             }, 500);
         });
