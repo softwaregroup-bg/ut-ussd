@@ -1,3 +1,13 @@
+<a name="6.5.8"></a>
+## [6.5.8](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.5.7...v6.5.8) (2016-11-16)
+
+
+### Bug Fixes
+
+* validations ([198781c](https://github.com/softwaregroup-bg/ut-ussd/commit/198781c))
+
+
+
 <a name="6.5.7"></a>
 ## [6.5.7](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.5.6...v6.5.7) (2016-11-01)
 
