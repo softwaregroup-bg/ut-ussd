@@ -1,3 +1,18 @@
+<a name="6.6.0"></a>
+# [6.6.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.5.8...v6.6.0) (2017-01-06)
+
+
+### Bug Fixes
+
+* linting and bug which appears when there's no phone number entered ([affa0ad](https://github.com/softwaregroup-bg/ut-ussd/commit/affa0ad))
+
+
+### Features
+
+* update dependencies ([c58a35d](https://github.com/softwaregroup-bg/ut-ussd/commit/c58a35d))
+
+
+
 <a name="6.5.8"></a>
 ## [6.5.8](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.5.7...v6.5.8) (2016-11-16)
 
