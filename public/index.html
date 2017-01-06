@@ -16,6 +16,9 @@
                 var phoneInput = jQuery('#phone-input input');
                 codeInput.val(code);
                 function makeUssdRequest(){
+                  if (!jQuery('#phone-input input').val()) {
+                      return;
+                  }
                   new ussdRequest(jQuery('#send-command'),jQuery('#response code'),jQuery('#phone-input'),'.data-collection');
                 }
                 jQuery('#send-command').on('click', makeUssdRequest);
@@ -28,12 +31,12 @@
                         clock.start();
                     }
                     makeUssdRequest();
-                  } 
+                  }
                 };
                 /*jQuery.ajax({
                   url: '/p/db/public.xml?export=1&export_json=1'
                 })
-                .done(function(data) { 
+                .done(function(data) {
                     $('#mfsp_name').text(data.DATAPACKET.ROWDATA[0].mfsp_name);
                     $('#phone-input-element').val(data.DATAPACKET.ROWDATA[0].default_ussd_phone);
                 })

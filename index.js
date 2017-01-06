@@ -62,7 +62,7 @@ var ussdModule = {
                 method: 'GET',
                 path: '/ussd/session',
                 handler: function(request, reply) {
-                    session.get()
+                    return session.get()
                         .then(function(data) {
                             var response = '';
                             if (!data) {
@@ -74,7 +74,7 @@ var ussdModule = {
                                         '</div>';
                                 });
                             }
-                            reply('<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
+                            return reply('<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
                                 response +
                                 '</span>');
                         })
@@ -85,12 +85,12 @@ var ussdModule = {
                 method: 'GET',
                 path: '/ussd/session/{key}',
                 handler: function(request, reply) {
-                    session.get(request.params.key)
+                    return session.get(request.params.key)
                         .then(function(value) {
                             if (!value) {
-                                reply('no session data');
+                                return reply('no session data');
                             } else {
-                                reply('<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
+                                return reply('<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
                                     JSON.stringify(value, null, 4) +
                                     '</span>');
                             }
@@ -102,9 +102,9 @@ var ussdModule = {
                 method: 'POST',
                 path: '/ussd',
                 handler: function(request, reply) {
-                    module.exports.request(request.payload)
+                    return module.exports.request(request.payload)
                         .then(function(data) {
-                            reply(ussd.buildResponse(data));
+                            return reply(ussd.buildResponse(data));
                         })
                         .done();
                 }
@@ -129,14 +129,14 @@ var ussdModule = {
                 method: 'POST',
                 path: '/closeUSSDSession',
                 handler: function(request, reply) {
-                    session.del(request.payload.phone)
+                    return session.del(request.payload.phone)
                         .then(function() {
-                            reply(ussd.buildResponse({
+                            return reply(ussd.buildResponse({
                                 shortMessage: 'Session Closed'
                             }));
                         })
                         .catch(function() {
-                            reply(ussd.buildResponse({
+                            return reply(ussd.buildResponse({
                                 shortMessage: 'error occurred when deleting the session data'
                             }));
                         })
@@ -226,7 +226,7 @@ var ussdModule = {
                 });
             }
             if (!data.system.state && Array.isArray(config.strings) && ~config.strings.indexOf(msg.message)) { // ussd string
-                data.system.ussdString = msg.message.split(/[\*#]/).slice(1, -1);
+                data.system.ussdString = msg.message.split(/[*#]/).slice(1, -1);
                 data.system.message = '*' + data.system.ussdString.shift() + '#';
             } else {
                 data.system.message = msg.message;
