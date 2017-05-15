@@ -4,7 +4,7 @@ Configuration options
 // configuration
 config = {
     // refresh: gets refreshed on every cycle;static(default): sets only once and will expire in predefined period of time (timeOut)
-    expireRule:  'refresh|static', 
+    expireRule:  'refresh|static',
     // expiration period definition
     timeOut: 1000,
     // shortcodes
@@ -22,6 +22,8 @@ config = {
     // default phone number for the simulator
     defaultPhone: "1234",
     // default shortcode for the simulator
-    defaultShortCode: "*131#"
+    defaultShortCode: "*131#",
+    // whether the characters count should be visible in the simulator
+    charsCount: true
 }
 ```
