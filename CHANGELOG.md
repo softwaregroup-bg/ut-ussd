@@ -1,3 +1,18 @@
+<a name="6.7.0"></a>
+# [6.7.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.6.0...v6.7.0) (2017-05-15)
+
+
+### Bug Fixes
+
+* docs ([fe3e47c](https://github.com/softwaregroup-bg/ut-ussd/commit/fe3e47c))
+
+
+### Features
+
+* add chars counter in the simulator ([0945296](https://github.com/softwaregroup-bg/ut-ussd/commit/0945296))
+
+
+
 <a name="6.6.0"></a>
 # [6.6.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.5.8...v6.6.0) (2017-01-06)
 
