@@ -113,16 +113,7 @@ var ussdModule = {
                 method: 'POST',
                 path: '/getUssdConfig',
                 handler: function(request, reply) {
-                    reply(
-                        '<UssdResponse version="1.0">' +
-                            '<DefaultCode>' +
-                                config.defaultShortCode +
-                            '</DefaultCode>' +
-                            '<PhoneNumber>' +
-                                config.defaultPhone +
-                            '</PhoneNumber>' +
-                    '</UssdResponse>'
-                    );
+                    reply(config);
                 }
             }),
             _.merge({}, config.routes.common, config.routes.closeSession, {

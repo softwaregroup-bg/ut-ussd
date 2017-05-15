@@ -1,3 +1,4 @@
+window.ussd = {}
 function ussdRequest(button, destination, phoneInput, dataCollection) {
   this.data = {};
 
@@ -65,7 +66,9 @@ function ussdRequest(button, destination, phoneInput, dataCollection) {
       destination.html(destination.html() + msg.textContent + '<br/>----------------<br/>');
       if(stat.textContent && (stat.textContent.match(/[a-zA-Z]+/ig).length>0))
         destination.html(destination.html() + stat.textContent + '<br/>----------------<br/>');
-
+      if (window.ussd.config.charsCount) {
+        $("#charsCount").html(msg.textContent.length);
+      }
       destination.animate({
         "scrollTop":destination.scrollTop()+destination.height()
       }, 500);
@@ -153,12 +156,13 @@ function setUssdDefaults() {
     jQuery.ajax({
         url: '/getUssdConfig',
         type: 'POST',
-        dataType: 'xml',
+        dataType: 'json',
         data: {}
     })
         .done(function (data) {
-            jQuery('#phone-input input').val(data.documentElement.getElementsByTagName('PhoneNumber')[0].textContent );
-            code = data.documentElement.getElementsByTagName('DefaultCode')[0].textContent || '*131#'; // use global code
+            window.ussd.config = data;
+            jQuery('#phone-input input').val(data.defaultPhone || '');
+            code = data.defaultShortCode || '*131#'; // use global code
             jQuery('#code-input input').val(code);
         })
         .fail(function (r, err, errDesc) {
