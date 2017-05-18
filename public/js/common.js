@@ -110,7 +110,7 @@ function closeUSSDSession(code){
     $("#code-input input").focus();
   })
   .done(function(data) {
-    $("#phone_screen code").html(data.documentElement.children[1].textContent);
+    $("#phone_screen code").html(data.documentElement.childNodes[1].textContent);
 //    $('#code-input input').val('*131#');
     $('#code-input input').val(data.documentElement.getElementsByTagName('DefaultCode')[0].textContent || '11');
     phone.isInUSSD = false;
