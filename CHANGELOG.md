@@ -1,3 +1,8 @@
+<a name="6.7.1"></a>
+## [6.7.1](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.7.0...v6.7.1) (2017-05-22)
+
+
+
 <a name="6.7.0"></a>
 # [6.7.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.6.0...v6.7.0) (2017-05-15)
 
