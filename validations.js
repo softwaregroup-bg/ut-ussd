@@ -11,5 +11,12 @@ module.exports = {
             sourceAddr: joi.string().label('source address'),
             debug: joi.object().label('debug info')
         })
+    },
+    'closeSession': {
+        auth: false,
+        params: joi.object({
+            phone: joi.string().label('phone')
+        }),
+        result: joi.string()
     }
 };
