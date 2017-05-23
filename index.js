@@ -249,14 +249,16 @@ var ussdModule = {
     closeSession: function(msg) {
         return session.del(msg.phone)
         .then(function() {
-            return ussd.buildResponse({
-                shortMessage: 'Session Closed'
-            });
+            return {
+                shortMessage: 'Session Closed',
+                sourceAddr: msg.phone
+            };
         })
         .catch(function() {
-            return ussd.buildResponse({
-                shortMessage: 'error occurred when deleting the session data'
-            });
+            return {
+                shortMessage: 'error occurred when deleting the session data',
+                sourceAddr: msg.phone
+            };
         });
     }
 };
