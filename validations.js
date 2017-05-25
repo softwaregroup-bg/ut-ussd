@@ -17,6 +17,9 @@ module.exports = {
         params: joi.object({
             phone: joi.string().label('phone')
         }),
-        result: joi.string()
+        result: joi.object({
+            shortMessage: joi.string().label('short message'),
+            sourceAddr: joi.string().label('source address')
+        })
     }
 };
