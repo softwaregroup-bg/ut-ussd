@@ -1,3 +1,16 @@
+<a name="6.7.7"></a>
+## [6.7.7](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.7.6...v6.7.7) (2017-05-26)
+
+
+### Bug Fixes
+
+* add closeSession method ([db00fd5](https://github.com/softwaregroup-bg/ut-ussd/commit/db00fd5))
+* close session not working on IE ([77e523b](https://github.com/softwaregroup-bg/ut-ussd/commit/77e523b))
+* return proper message ([dcce67d](https://github.com/softwaregroup-bg/ut-ussd/commit/dcce67d))
+* validation of closeSession method ([2a32a4a](https://github.com/softwaregroup-bg/ut-ussd/commit/2a32a4a))
+
+
+
 <a name="6.7.6"></a>
 ## [6.7.6](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.7.5...v6.7.6) (2017-05-22)
 
