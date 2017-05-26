@@ -120,16 +120,9 @@ var ussdModule = {
                 method: 'POST',
                 path: '/closeUSSDSession',
                 handler: function(request, reply) {
-                    return session.del(request.payload.phone)
-                        .then(function() {
-                            return reply(ussd.buildResponse({
-                                shortMessage: 'Session Closed'
-                            }));
-                        })
-                        .catch(function() {
-                            return reply(ussd.buildResponse({
-                                shortMessage: 'error occurred when deleting the session data'
-                            }));
+                    return module.exports.closeSession(request.payload)
+                        .then(function(data) {
+                            return reply(ussd.buildResponse(data));
                         })
                         .done();
                 }
@@ -251,6 +244,21 @@ var ussdModule = {
                 };
             }
             throw err;
+        });
+    },
+    closeSession: function(msg) {
+        return session.del(msg.phone)
+        .then(function() {
+            return {
+                shortMessage: 'Session Closed',
+                sourceAddr: msg.phone
+            };
+        })
+        .catch(function() {
+            return {
+                shortMessage: 'error occurred when deleting the session data',
+                sourceAddr: msg.phone
+            };
         });
     }
 };
