@@ -77,8 +77,7 @@ var ussdModule = {
                             return reply('<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
                                 response +
                                 '</span>');
-                        })
-                        .done();
+                        });
                 }
             }),
             _.merge({}, config.routes.common, config.routes.sessionKey, {
@@ -94,8 +93,7 @@ var ussdModule = {
                                     JSON.stringify(value, null, 4) +
                                     '</span>');
                             }
-                        })
-                        .done();
+                        });
                 }
             }),
             _.merge({}, config.routes.common, config.routes.ussd, {
@@ -105,8 +103,7 @@ var ussdModule = {
                     return module.exports.request(request.payload)
                         .then(function(data) {
                             return reply(ussd.buildResponse(data));
-                        })
-                        .done();
+                        });
                 }
             }),
             _.merge({}, config.routes.common, config.routes.config, {
@@ -123,8 +120,7 @@ var ussdModule = {
                     return module.exports.closeSession(request.payload)
                         .then(function(data) {
                             return reply(ussd.buildResponse(data));
-                        })
-                        .done();
+                        });
                 }
             })
         ]);
