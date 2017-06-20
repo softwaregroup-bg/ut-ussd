@@ -1,3 +1,13 @@
+<a name="6.7.8"></a>
+## [6.7.8](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.7.7...v6.7.8) (2017-06-20)
+
+
+### Bug Fixes
+
+* remove .done from all promises as when is no longer used in ut-bus ([39443ec](https://github.com/softwaregroup-bg/ut-ussd/commit/39443ec))
+
+
+
 <a name="6.7.7"></a>
 ## [6.7.7](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.7.6...v6.7.7) (2017-05-26)
 
