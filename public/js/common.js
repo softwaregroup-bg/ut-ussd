@@ -164,6 +164,9 @@ function setUssdDefaults() {
             jQuery('#phone-input input').val(data.defaultPhone || '');
             code = data.defaultShortCode || '*131#'; // use global code
             jQuery('#code-input input').val(code);
+            if (data.slogan) {
+              jQuery('#mfsp_name').text(data.slogan);
+            }
         })
         .fail(function (r, err, errDesc) {
         });
