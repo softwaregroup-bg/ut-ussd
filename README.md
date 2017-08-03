@@ -25,7 +25,7 @@ config = {
     defaultShortCode: "*131#",
     // whether the characters count should be visible in the simulator
     charsCount: true,
-    // To display a slogan with the respective text above the phone number input
+    // To display a slogan with the respective text above the phone number input (no slogan will be displayed by default)
     slogan: 'Test MFSP 1'
 }
 ```
