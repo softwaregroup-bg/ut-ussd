@@ -1,3 +1,13 @@
+<a name="6.7.9"></a>
+## [6.7.9](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.7.8...v6.7.9) (2017-08-03)
+
+
+### Bug Fixes
+
+* add slogan configuration ([1ea7dc4](https://github.com/softwaregroup-bg/ut-ussd/commit/1ea7dc4))
+
+
+
 <a name="6.7.8"></a>
 ## [6.7.8](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.7.7...v6.7.8) (2017-06-20)
 
