@@ -31,6 +31,13 @@ function getExpirationTime() {
     d.setTime(d.getTime() + (config.timeOut || 300) * 1000); // 5 minutes default
     return d.toLocaleString();
 }
+
+function polyfill(fn) {
+    return function(request, h) {
+        return fn(request, h.response || h);
+    };
+}
+
 var ussdModule = {
     config: function(c) {
         _.merge(config, c);
@@ -42,7 +49,9 @@ var ussdModule = {
         session = require('./lib/session')({bus: bus});
         ussd = require('./lib/ussd')({bus: bus, config: config});
         if (config.identity) {
-            identity = bus.importMethod('identity.get');
+            identity = function(msg) {
+                return bus.importMethod('identity.get')(msg);
+            };
         }
     },
     start: function() {
@@ -61,7 +70,7 @@ var ussdModule = {
             _.merge({}, config.routes.common, config.routes.session, {
                 method: 'GET',
                 path: '/ussd/session',
-                handler: function(request, reply) {
+                handler: polyfill(function(request, reply) {
                     return session.get()
                         .then(function(data) {
                             var response = '';
@@ -78,12 +87,12 @@ var ussdModule = {
                                 response +
                                 '</span>');
                         });
-                }
+                })
             }),
             _.merge({}, config.routes.common, config.routes.sessionKey, {
                 method: 'GET',
                 path: '/ussd/session/{key}',
-                handler: function(request, reply) {
+                handler: polyfill(function(request, reply) {
                     return session.get(request.params.key)
                         .then(function(value) {
                             if (!value) {
@@ -94,34 +103,34 @@ var ussdModule = {
                                     '</span>');
                             }
                         });
-                }
+                })
             }),
             _.merge({}, config.routes.common, config.routes.ussd, {
                 method: 'POST',
                 path: '/ussd',
-                handler: function(request, reply) {
-                    return module.exports.request(request.payload)
+                handler: polyfill(function(request, reply) {
+                    return ussdModule.request(request.payload)
                         .then(function(data) {
                             return reply(ussd.buildResponse(data));
                         });
-                }
+                })
             }),
             _.merge({}, config.routes.common, config.routes.config, {
                 method: 'POST',
                 path: '/getUssdConfig',
-                handler: function(request, reply) {
+                handler: polyfill(function(request, reply) {
                     reply(config);
-                }
+                })
             }),
             _.merge({}, config.routes.common, config.routes.closeSession, {
                 method: 'POST',
                 path: '/closeUSSDSession',
-                handler: function(request, reply) {
-                    return module.exports.closeSession(request.payload)
+                handler: polyfill(function(request, reply) {
+                    return ussdModule.closeSession(request.payload)
                         .then(function(data) {
                             return reply(ussd.buildResponse(data));
                         });
-                }
+                })
             })
         ]);
     },
@@ -244,18 +253,18 @@ var ussdModule = {
     },
     closeSession: function(msg) {
         return session.del(msg.phone)
-        .then(function() {
-            return {
-                shortMessage: 'Session Closed',
-                sourceAddr: msg.phone
-            };
-        })
-        .catch(function() {
-            return {
-                shortMessage: 'error occurred when deleting the session data',
-                sourceAddr: msg.phone
-            };
-        });
+            .then(function() {
+                return {
+                    shortMessage: 'Session Closed',
+                    sourceAddr: msg.phone
+                };
+            })
+            .catch(function() {
+                return {
+                    shortMessage: 'error occurred when deleting the session data',
+                    sourceAddr: msg.phone
+                };
+            });
     }
 };
 
