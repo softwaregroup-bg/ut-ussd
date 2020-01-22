@@ -1,3 +1,13 @@
+<a name="6.8.0"></a>
+# [6.8.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.7.9...v6.8.0) (2020-01-22)
+
+
+### Features
+
+* update code, hapi backwards compatibility ([d164301](https://github.com/softwaregroup-bg/ut-ussd/commit/d164301))
+
+
+
 <a name="6.7.9"></a>
 ## [6.7.9](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.7.8...v6.7.9) (2017-08-03)
 
