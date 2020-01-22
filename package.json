@@ -4,15 +4,13 @@
   "dependencies": {
     "ut-template": "^5.5.0",
     "lodash.clonedeep": "4.5.0",
-    "lodash.isfunction": "3.0.8",
-    "lodash.isobject": "3.0.2",
     "lodash.merge": "4.6.0",
     "sax": "1.2.1",
     "when": "3.7.7",
     "joi": "10.0.6"
   },
   "devDependencies": {
-    "ut-tools": "^5.11.1"
+    "ut-tools": "^5.32.11"
   },
   "description": "UT USSD module",
   "scripts": {
@@ -25,6 +23,7 @@
     "postpublish": "ut-postpublish",
     "postversion": "ut-postversion",
     "precommit": "ut-precommit",
+    "precover": "ut-precover",
     "prepublish": "ut-prepublish",
     "prepush": "ut-prepush",
     "pretest": "ut-pretest",
