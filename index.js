@@ -26,6 +26,11 @@ var config = {
 };
 var identity;
 
+const userFriendlyErrorMessages = {
+  "Unexpected token < in JSON at position 0":
+    "Something went wrong, please try again later!",
+};
+
 function getExpirationTime() {
     var d = new Date();
     d.setTime(d.getTime() + (config.timeOut || 300) * 1000); // 5 minutes default
@@ -37,13 +42,15 @@ var ussdModule = {
         return ussdModule;
     },
     init: function(bus) {
-        delete ussdModule.config;
-        _.merge(config, bus.config.ussd || {}, {debug: bus.config.debug});
-        session = require('./lib/session')({bus: bus});
-        ussd = require('./lib/ussd')({bus: bus, config: config});
-        if (config.identity) {
-            identity = bus.importMethod('identity.get');
-        }
+        setTimeout(() => {
+            delete ussdModule.config;
+            _.merge(config, bus.config.ussd || {}, {debug: bus.config.debug});
+            session = require('./lib/session')({bus: bus});
+            ussd = require('./lib/ussd')({bus: bus, config: config});
+            if (config.identity) {
+                identity = bus.importMethod('identity.get');
+            }
+        }, 100);
     },
     start: function() {
         this.registerRequestHandler && this.registerRequestHandler([
@@ -74,7 +81,7 @@ var ussdModule = {
                                         '</div>';
                                 });
                             }
-                            return reply('<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
+                            return reply.response('<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
                                 response +
                                 '</span>');
                         });
@@ -87,9 +94,9 @@ var ussdModule = {
                     return session.get(request.params.key)
                         .then(function(value) {
                             if (!value) {
-                                return reply('no session data');
+                                return reply.response('no session data');
                             } else {
-                                return reply('<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
+                                return reply.response('<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
                                     JSON.stringify(value, null, 4) +
                                     '</span>');
                             }
@@ -102,7 +109,13 @@ var ussdModule = {
                 handler: function(request, reply) {
                     return module.exports.request(request.payload)
                         .then(function(data) {
-                            return reply(ussd.buildResponse(data));
+                            if (data.error &&userFriendlyErrorMessages[data.error]) {
+                              return reply.response(ussd.buildResponse({...data, 
+                                  error: userFriendlyErrorMessages[data.error],
+                                  shortMessage: data.shortMessage.replace(data.error,userFriendlyErrorMessages[data.error]),
+                                }));
+                            }
+                            return reply.response(ussd.buildResponse(data));
                         });
                 }
             }),
@@ -110,8 +123,8 @@ var ussdModule = {
                 method: 'POST',
                 path: '/getUssdConfig',
                 handler: function(request, reply) {
-                    reply(config);
-                }
+                    return reply.response(config);
+                } 
             }),
             _.merge({}, config.routes.common, config.routes.closeSession, {
                 method: 'POST',
@@ -119,7 +132,7 @@ var ussdModule = {
                 handler: function(request, reply) {
                     return module.exports.closeSession(request.payload)
                         .then(function(data) {
-                            return reply(ussd.buildResponse(data));
+                            return reply.response(ussd.buildResponse(data));
                         });
                 }
             })
@@ -133,7 +146,7 @@ var ussdModule = {
                 throw e;
             }
             return session.get(msg.phone).then(function(data) {
-                if (!data || msg.newSession) { // no session
+                if (!data || msg.newSession || config.defaultShortCode === msg.message) { // no session
                     if (identity) {
                         data = identity({
                             username: msg.phone,
@@ -148,7 +161,7 @@ var ussdModule = {
                                     meta: {
                                         auth: auth
                                     },
-                                    newSession: msg.newSession
+                                    newSession: (msg.newSession || config.defaultShortCode === msg.message)
                                 }
                             };
                         });
@@ -159,7 +172,7 @@ var ussdModule = {
                                 phone: msg.phone,
                                 backtrack: [],
                                 routes: {},
-                                newSession: msg.newSession
+                                newSession: (msg.newSession || config.defaultShortCode === msg.message)
                             }
                         };
                     }
@@ -210,6 +223,13 @@ var ussdModule = {
                 data.system.message = '*' + data.system.ussdString.shift() + '#';
             } else {
                 data.system.message = msg.message;
+            }
+            if (msg.language) {
+              data.language = msg.language;
+            }
+
+            if (msg.session) {
+              data.session = msg.session;
             }
             return ussd.receive(data).then(ussd.route).then(ussd.send);
         }).then(function(data) {
