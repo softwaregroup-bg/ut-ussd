@@ -1,0 +1,4 @@
+${T`Error encountered`}.
+${params.error.showError ? params.error.message : `${T`Please contact Customer Service`}.`}
+
+${include('../../../components/backToHome.xml')}

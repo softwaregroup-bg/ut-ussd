@@ -1,25 +1,38 @@
-var joi = require('joi');
-module.exports = {
-    'request': {
-        auth: false,
-        params: joi.object({
-            phone: joi.string().label('phone'),
-            message: joi.string().label('message')
+module.exports = function validation({joi}) {
+    return {
+        'ussd.config.get': () => ({
+            method: 'GET',
+            path: '/config',
+            auth: false
         }),
-        result: joi.object({
-            shortMessage: joi.string().label('short message'),
-            sourceAddr: joi.string().label('source address'),
-            debug: joi.object().label('debug info')
-        })
-    },
-    'closeSession': {
-        auth: false,
-        params: joi.object({
-            phone: joi.string().label('phone')
+        'ussd.session.fetch': () => ({
+            method: 'GET',
+            path: '/session',
+            auth: false
         }),
-        result: joi.object({
-            shortMessage: joi.string().label('short message'),
-            sourceAddr: joi.string().label('source address')
+        'ussd.session.get': () => ({
+            method: 'GET',
+            path: '/session/{key}',
+            auth: false
+        }),
+        'ussd.session.remove': () => ({
+            method: 'DELETE',
+            path: '/session',
+            auth: false
+        }),
+        'ussd.message.process': () => ({
+            // Used by the USSD Simulator (disable in prod)
+            method: 'POST',
+            // Actual route is /rpc/ussd/message
+            path: '/message',
+            validate: {
+                payload: joi.object({
+                    phone: joi.string().required(),
+                    ussdMessage: joi.string().required(),
+                    newSession: joi.boolean()
+                })
+            },
+            auth: false
         })
-    }
+    };
 };

@@ -1,0 +1,24 @@
+${params.view === 'pin' ? `
+${T`Please enter your PIN`}
+` : '' || params.view === 'wrongPin' ? `
+${T`Wrong PIN`}.
+${T`Please try again`}:
+` : '' || params.view === 'newPin' ? `
+${T`Your PIN needs to be changed in order to proceed`}.
+${T`Please enter your new PIN`}:
+` : '' || params.view === 'confirmPin' ? `
+${T`Please enter your new PIN again to confirm the change`}:
+` : '' || params.view === 'notMatching' ? `
+${T`Entered PINs don't match`}.
+${T`Please enter your new PIN`}:
+` : '' || params.view === 'changeSuccessful' ? `
+${T`Your PIN was successfully changed`}.
+${T`Welcome USSD Mobile Banking`}.
+
+${include('../../components/backToHome.xml')}
+` : '' || params.view === 'error' ? `
+${T`Error encountered`}.
+${T`Please contact Customer Service`}.
+` : ''}
+
+<a id="9" href="menu">9. ${T`Cancel`}</a>

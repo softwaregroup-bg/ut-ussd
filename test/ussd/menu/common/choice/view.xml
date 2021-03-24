@@ -1,0 +1,5 @@
+${T`${params.choice.message}`}
+
+${params.choice.collection.map((item, index) =>`<a>${index+1}. ${Object.keys(item).filter(key => params.choice.itemFieldsToDisplay.includes(key)).map(key => item[key]).join(' ')}</a>`).join(`<br/>`)}
+
+${include('../../../components/backToHome.xml')}

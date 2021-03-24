@@ -1,0 +1,8 @@
+${params.view === 'notRegistered' ? `
+${T`This mobile number is not registered for this service`}.
+` : '' || params.view === 'pendingApproval' ? `
+${T`Service registration is pending approval`}.
+` : '' || params.view === 'error' ? `
+${T`Error encountered`}.
+${T`Please, contact Customer Service`}.
+` : ''}
