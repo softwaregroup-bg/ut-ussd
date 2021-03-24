@@ -29,7 +29,7 @@
       ],
       defaultPhone: "1234", // default phone number for the simulator
       defaultShortCode: "*131#", // default short code for the simulator
-      charsCount: true, // whether the characters count should be visible in the simulator
+      charsCount: true, // if characters count should be visible in the simulator
       // To display a slogan with the respective text above the phone number input
       // (no slogan will be displayed by default)
       slogan: 'Test'
