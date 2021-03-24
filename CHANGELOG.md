@@ -1,3 +1,12 @@
+# [7.0.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.8.0...v7.0.0) (2021-03-24)
+
+
+### Features
+
+* major refactor to latest patterns ([cb5723d](https://github.com/softwaregroup-bg/ut-ussd/commit/cb5723d123f89958c49929125025d0edcbc35a91))
+
+
+
 <a name="6.8.0"></a>
 # [6.8.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v6.7.9...v6.8.0) (2020-01-22)
 
