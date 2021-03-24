@@ -40,7 +40,10 @@ module.exports = () => ({
         gateway: true
     },
     types: {
-        gateway: true
+        gateway: true,
+        ussd: {
+            baseDir: __dirname
+        }
     },
     doc: {
         gateway: true
