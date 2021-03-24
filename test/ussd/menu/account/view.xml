@@ -1,0 +1,5 @@
+<a id="1" href="menu/account/miniStatement">1. ${T`Mini statement`}</a>
+<a id="2" href="menu/account/balanceEnquiry">2. ${T`Balance enquiry`}</a>
+
+${include('../../components/back.xml')}
+${include('../../components/backToHome.xml')}

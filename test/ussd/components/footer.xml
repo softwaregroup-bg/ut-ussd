@@ -1,0 +1,2 @@
+${params.delimiter || '---'}
+${params.service.name}@${params.service.version}

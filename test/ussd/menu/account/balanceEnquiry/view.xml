@@ -1,0 +1,9 @@
+${T`Balance enquiry`}:
+
+${T`Account`}: ${params.balanceEnquiry.accountNumber}
+${T`Working balance`}: ${params.balanceEnquiry.workingBalance} ${params.balanceEnquiry.currency}
+${T`Online cleared balance`}: ${params.balanceEnquiry.onlineClearedBalance} ${params.balanceEnquiry.currency}
+${T`Online actual balance`}: ${params.balanceEnquiry.onlineActualBalance} ${params.balanceEnquiry.currency}
+
+${include('../../../components/back.xml')}
+${include('../../../components/backToHome.xml')}

@@ -40,9 +40,9 @@ var phone;
         this.btnClickTimeout = null;
     };
 
-    Phone.prototype.showMessage = function(message) {
+    Phone.prototype.showMessage = function(ussdMessage) {
         var pane = this.infoPane;
-        pane.text(message);
+        pane.text(ussdMessage);
         pane.fadeIn(500, function() {
             setTimeout(function() {
                 pane.fadeOut(500, function() {
@@ -60,7 +60,7 @@ var phone;
         }, 500);
     };
 
-    Phone.prototype.stopLoading = function(message) {
+    Phone.prototype.stopLoading = function(ussdMessage) {
         clearTimeout(this.loadingTimeout);
         this.btnClickTimeout = null;
         this.infoPane.hide();

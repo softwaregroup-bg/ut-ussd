@@ -1,0 +1,4 @@
+${params.miniStatement.map((rec, index) =>`<a>${index+1}. ${rec.amount} on ${rec.postDate}</a>`).join(`<br/>`)}
+
+${include('../../../components/back.xml')}
+${include('../../../components/backToHome.xml')}

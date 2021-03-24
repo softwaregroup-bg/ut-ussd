@@ -1,0 +1,7 @@
+${T`Welcome to USSD service`}
+
+<a id="1" href="menu/account">1. ${T`Account information`}</a>
+<a id="2" href="menu/transfer">2. ${T`Funds transfer`}</a>
+<a id="3" href="menu/loan">3. ${T`Loan information`}</a>
+<a id="4" href="menu/maintenance">4. ${T`Maintenance`}</a>
+<a id="5" href="menu/support">5. ${T`Call Support`}</a>
