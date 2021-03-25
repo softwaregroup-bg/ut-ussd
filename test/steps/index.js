@@ -1,10 +1,10 @@
 const got = require('got');
 
 module.exports = [
-    function steps({traceStep}) {
+    function steps({callSite}) {
         return {
             'steps.ussd.send': (ussdMessage, expect, name = 'sending ' + ussdMessage) => ({
-                ...traceStep?.(),
+                ...callSite?.(),
                 name,
                 params: ({uri}) => got(`${uri}/rpc/ussd/message`, {
                     method: 'post',
