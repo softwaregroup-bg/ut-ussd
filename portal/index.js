@@ -6,6 +6,9 @@ export default () => function utUssd() {
     return {
         config: require('./config'),
         browser: () => [
+            function backend() {
+                return {namespace: 'ussd'};
+            },
             component,
             handle
         ]
