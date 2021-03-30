@@ -1,3 +1,12 @@
+## [7.1.1](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.0...v7.1.1) (2021-03-30)
+
+
+### Bug Fixes
+
+* add namespace to backend port ([844794a](https://github.com/softwaregroup-bg/ut-ussd/commit/844794aa199164263b8d1e171ee257ac9eb67167))
+
+
+
 # [7.1.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.0.2...v7.1.0) (2021-03-30)
 
 
