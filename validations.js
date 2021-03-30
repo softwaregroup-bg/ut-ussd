@@ -1,26 +1,26 @@
 module.exports = function validation({joi}) {
     return {
-        'ussd.config.get': () => ({
+        'ussd.config.getRest': () => ({
             method: 'GET',
             path: '/config',
             auth: false
         }),
-        'ussd.session.fetch': () => ({
+        'ussd.session.fetchRest': () => ({
             method: 'GET',
             path: '/session',
             auth: false
         }),
-        'ussd.session.get': () => ({
+        'ussd.session.getRest': () => ({
             method: 'GET',
             path: '/session/{key}',
             auth: false
         }),
-        'ussd.session.remove': () => ({
+        'ussd.session.removeRest': () => ({
             method: 'DELETE',
             path: '/session',
             auth: false
         }),
-        'ussd.message.process': () => ({
+        'ussd.message.processRest': () => ({
             // Used by the USSD Simulator (disable in prod)
             method: 'POST',
             // Actual route is /rpc/ussd/message
@@ -33,6 +33,20 @@ module.exports = function validation({joi}) {
                 })
             },
             auth: false
+        }),
+        'ussd.message.process': () => ({
+            params: joi.object({
+                phone: joi.string().required(),
+                ussdMessage: joi.string().required(),
+                newSession: joi.boolean()
+            }),
+            result: joi.object({
+                response: joi.string()
+            })
+        }),
+        'ussd.config.get': () => ({
+            params: joi.object(),
+            result: joi.object()
         })
     };
 };

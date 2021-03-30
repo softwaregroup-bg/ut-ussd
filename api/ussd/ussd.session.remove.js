@@ -6,8 +6,8 @@ module.exports = ({
         request,
         engine
     }
-}) => ({
-    async 'ussd.session.remove'() {
+}) => {
+    async function remove() {
         try {
             await sessions.del(request.payload.phone);
             return engine.buildResponse({shortMessage: 'Session Closed'});
@@ -15,4 +15,8 @@ module.exports = ({
             return engine.buildResponse({shortMessage: 'error occurred when deleting the session data'});
         }
     }
-});
+    return {
+        'ussd.session.remove': remove,
+        'ussd.session.removeRest': remove
+    };
+};

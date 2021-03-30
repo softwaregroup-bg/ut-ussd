@@ -5,8 +5,12 @@ module.exports = ({
         request,
         engine
     }
-}) => ({
-    async 'ussd.message.process'(params, $meta) {
+}) => {
+    async function process(params, $meta) {
         return engine.buildResponse(await request(params));
     }
-});
+    return {
+        'ussd.message.process': process,
+        'ussd.message.processRest': process
+    };
+};

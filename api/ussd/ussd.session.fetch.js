@@ -4,8 +4,8 @@ module.exports = ({
     lib: {
         sessions
     }
-}) => ({
-    async 'ussd.session.fetch'() {
+}) => {
+    async function fetch() {
         const data = await sessions.get();
         let response = '';
         if (!data) {
@@ -20,5 +20,9 @@ module.exports = ({
         return '<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
             response +
             '</span>';
-    }
-});
+    };
+    return {
+        'ussd.session.fetch': fetch,
+        'ussd.session.fetchRest': fetch
+    };
+};

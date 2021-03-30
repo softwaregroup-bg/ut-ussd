@@ -3,7 +3,6 @@
 module.exports = ({
     config
 }) => ({
-    'ussd.config.get'() {
-        return config;
-    }
+    'ussd.config.get': () => config,
+    'ussd.config.getRest': () => config
 });

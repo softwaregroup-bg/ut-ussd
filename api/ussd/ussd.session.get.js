@@ -4,8 +4,8 @@ module.exports = ({
     lib: {
         sessions
     }
-}) => ({
-    async 'ussd.session.get'({key}) {
+}) => {
+    async function get({key}) {
         const value = await sessions.get(key);
         if (!value) {
             return 'no session data';
@@ -15,4 +15,8 @@ module.exports = ({
                 '</span>';
         }
     }
-});
+    return {
+        'ussd.session.get': get,
+        'ussd.session.getRest': get
+    };
+};
