@@ -1,5 +1,3 @@
-const {resolve} = require('path');
-
 module.exports = {
     implementation: 'ussd',
     adapter: true,
@@ -33,12 +31,5 @@ module.exports = {
     utCustomer: true,
     utDocument: true,
     utUser: true,
-    utUssd: {
-        ussd: {
-            shortCodes: {
-                '*123#': 'menu'
-            },
-            baseDir: resolve(__dirname, '..', 'ussd')
-        }
-    }
+    utUssd: true
 };

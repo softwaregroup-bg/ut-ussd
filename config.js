@@ -1,4 +1,12 @@
+const {resolve} = require('path');
+
 const test = {
+    ussd: {
+        shortCodes: {
+            '*123#': 'menu'
+        },
+        baseDir: resolve(__dirname, 'test', 'ussd')
+    },
     sqlStandard: true
 };
 
