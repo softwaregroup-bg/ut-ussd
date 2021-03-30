@@ -1,3 +1,12 @@
+# [7.1.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.0.2...v7.1.0) (2021-03-30)
+
+
+### Features
+
+* simulator page ([1a0c16d](https://github.com/softwaregroup-bg/ut-ussd/commit/1a0c16dd84728bf23b120728d87270dd0e0761c4))
+
+
+
 ## [7.0.2](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.0.1...v7.0.2) (2021-03-25)
 
 
