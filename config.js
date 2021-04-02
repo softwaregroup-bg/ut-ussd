@@ -45,12 +45,15 @@ module.exports = () => ({
     kustomize: {
         adapter: true,
         orchestrator: true,
-        gateway: true
+        gateway: true,
+        ussd: {
+            baseDir: resolve(__dirname, 'test', 'ussd')
+        }
     },
     types: {
         gateway: true,
         ussd: {
-            baseDir: __dirname
+            baseDir: resolve(__dirname, 'test', 'ussd')
         }
     },
     doc: {
