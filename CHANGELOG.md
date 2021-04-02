@@ -1,3 +1,12 @@
+## [7.1.8](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.7...v7.1.8) (2021-04-02)
+
+
+### Bug Fixes
+
+* do not break kustomize ([22f2bd3](https://github.com/softwaregroup-bg/ut-ussd/commit/22f2bd362847241d1462e7c7074d36f5f5f6b809))
+
+
+
 ## [7.1.7](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.6...v7.1.7) (2021-03-31)
 
 
