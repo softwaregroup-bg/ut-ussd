@@ -4,8 +4,7 @@ const test = {
     ussd: {
         shortCodes: {
             '*123#': 'menu'
-        },
-        baseDir: resolve(__dirname, 'test', 'ussd')
+        }
     },
     sqlStandard: true
 };
@@ -18,6 +17,7 @@ module.exports = () => ({
             defaultShortCode: '*123#',
             defaultPhone: '0888',
             identity: false,
+            baseDir: resolve(__dirname, 'test', 'ussd'),
             routes: {
                 common: { // applies for all routes
                     config: {
@@ -45,16 +45,10 @@ module.exports = () => ({
     kustomize: {
         adapter: true,
         orchestrator: true,
-        gateway: true,
-        ussd: {
-            baseDir: resolve(__dirname, 'test', 'ussd')
-        }
+        gateway: true
     },
     types: {
-        gateway: true,
-        ussd: {
-            baseDir: resolve(__dirname, 'test', 'ussd')
-        }
+        gateway: true
     },
     doc: {
         gateway: true
