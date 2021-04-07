@@ -1,3 +1,12 @@
+## [7.1.9](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.8...v7.1.9) (2021-04-07)
+
+
+### Bug Fixes
+
+* use default baseDir ([c2c957d](https://github.com/softwaregroup-bg/ut-ussd/commit/c2c957d3d83ade36bc379c2eaa47027c4a3b814b))
+
+
+
 ## [7.1.8](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.7...v7.1.8) (2021-04-02)
 
 
