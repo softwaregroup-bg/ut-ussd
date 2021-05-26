@@ -6,6 +6,33 @@ const sax = require('sax');
 const loadTemplate = require('ut-function.template');
 const util = require('./util');
 
+const buildResponse = ({
+    config: {
+        defaultShortCode,
+        defaultPhone
+    }
+}) => function(data) {
+    const x = merge({
+            errorCode: 0,
+            errorMessage: '',
+            shortMessage: 'no ussdMessage provided'
+        },
+        data
+    );
+    return {
+        ...(x.errorCode !== 0) && {
+            error: {
+                code: x.errorCode,
+                message: x.errorMessage,
+                shortMessage: x.shortMessage
+            }
+        },
+        message: x.shortMessage,
+        defaultCode: defaultShortCode,
+        phoneNumber: defaultPhone
+    };
+}
+
 /** @type { import("../../handlers").libFactory } */
 module.exports = ({
     config,
@@ -13,44 +40,40 @@ module.exports = ({
     vfs,
     import: imp
 }) => {
-    const states = config.baseDir;
+    const statesDir = config.baseDir;
     let hooks;
     try {
-        hooks = require(path.join(states, 'hooks.js'));
+        hooks = require(path.join(statesDir, 'hooks.js'));
     } catch (e) {
         hooks = {};
     }
     const engine = {
-        buildResponse: function(data) {
-            const x = merge({errorCode: 0, errorMessage: '', shortMessage: 'no ussdMessage provided'}, data);
-            return {
-                ...(x.errorCode !== 0) && {
-                    error: {
-                        code: x.errorCode,
-                        message: x.errorMessage,
-                        shortMessage: x.shortMessage
-                    }
-                },
-                message: x.shortMessage,
-                defaultCode: config.defaultShortCode,
-                phoneNumber: config.defaultPhone
-            };
-        },
+        buildResponse: buildResponse({config}),
         route(data) {
-            let state;
-            if (config.shortCodes[data.system.ussdMessage]) {
-                state = config.shortCodes[data.system.ussdMessage];
-            } else if (data.system.routes[data.system.ussdMessage] || data.system.routes['*']) {
-                state = data.system.routes[data.system.ussdMessage] || data.system.routes['*'];
-                if (state === 'back') {
-                    state = data.system.backtrack[data.system.backtrack.length - 2];
+            const {
+                system: {
+                    ussdMessage,
+                    routes,
+                    backtrack,
+                    state
+                }
+            } = data;
+
+            let newState;
+            if (config.shortCodes[ussdMessage]) {
+                newState = config.shortCodes[ussdMessage];
+            } else if (routes[ussdMessage] || routes['*']) {
+                newState = routes[ussdMessage] || routes['*'];
+                if (newState === 'back') {
+                    newState = backtrack[backtrack.length - 2];
                 }
             } else {
-                state = config.wrongInputState || 'menu/error/wrongInput';
+                newState = config.wrongInputState ||
+                'menu/error/wrongInput';
             }
-            state = util.normalizeState(data.system.state, state);
-            data.system.prevState = data.system.state;
-            data.system.state = state;
+            newState = util.normalizeState(state, newState);
+            data.system.prevState = state;
+            data.system.state = newState;
             util.backtrack(data);
             util.parseRequestParams(data);
             return data;
@@ -61,7 +84,11 @@ module.exports = ({
             let controller;
             let send;
             try {
-                controllerPath = require.resolve(path.join(states, data.system.state, 'controller.js'));
+                controllerPath = require.resolve(path.join(
+                    statesDir,
+                    data.system.state,
+                    'controller.js'
+                ));
             } catch (e) {
             }
             if (controllerPath) {
@@ -72,7 +99,7 @@ module.exports = ({
                     send = controller.send;
                 }
             }
-            send = send || (data => data);
+            send = send || (x => x);
             // logic
             const system = cloneDeep(data.system);
             async function formatResult(result) {
@@ -82,7 +109,9 @@ module.exports = ({
                 }
                 if (redirect) {
                     data.system = system;
-                    return await engine.send(await engine.route(data));
+                    return await engine.send(
+                        await engine.route(data)
+                    );
                 }
                 if (result === true) {
                     formattedResult = data;
@@ -100,21 +129,54 @@ module.exports = ({
                 import: imp,
                 utMethod,
                 redirect: function(state) {
-                    system.routes = {redirect: (typeof state === 'string' ? state : state.href)};
+                    system.routes = {
+                        redirect: (
+                            typeof state === 'string'
+                            ? state
+                            : state.href
+                        )
+                    };
                     system.ussdMessage = 'redirect';
                     redirect = true;
                     return redirect;
                 }
             };
-            if (hooks.beforeSend) tasks.push(async params => await formatResult(await hooks.beforeSend.call(context, params)));
-            tasks.push(async params => redirect ? params : await formatResult(await send.call(context, params)));
-            if (hooks.afterSend) tasks.push(async params => redirect ? params : await formatResult(await hooks.afterSend.call(context, params)));
+            if (hooks.beforeSend) {
+                tasks.push(
+                    async params =>
+                        await formatResult(
+                            await hooks.beforeSend.call(context, params)
+                        )
+                );
+            }
+            tasks.push(
+                async params =>
+                    redirect
+                    ? params
+                    : await formatResult(
+                        await send.call(context, params)
+                    )
+            );
+            if (hooks.afterSend) {
+                tasks.push(
+                    async params =>
+                        redirect
+                        ? params
+                        : await formatResult(
+                            await hooks.afterSend.call(context, params)
+                        )
+                );
+            }
             try {
                 for (const task of tasks) {
                     data = await task(data);
                 }
             } catch (error) {
-                const err = new Error(((error.ussdMessage || '') + ' | js error thrown by controller at state ' + system.state));
+                const err = new Error((
+                    (error.ussdMessage || '') +
+                    ' | js error thrown by controller at state ' +
+                    system.state
+                ));
                 // @ts-ignore
                 err.cause = error;
                 throw err;
@@ -128,7 +190,13 @@ module.exports = ({
             let controller;
             let receive;
             try {
-                controllerPath = require.resolve(path.join(states, data.system.state, 'controller.js'));
+                controllerPath = require.resolve(
+                    path.join(
+                        statesDir,
+                        data.system.state,
+                        'controller.js'
+                    )
+                );
             } catch (e) {
             }
             if (controllerPath) {
@@ -226,7 +294,7 @@ module.exports = ({
                 )({...data, ...params}, translate, (newFile, p) => load(path.resolve(path.dirname(file), newFile), p));
             }
             try {
-                const result = load(path.join(states, data.system.state, 'view.xml'));
+                const result = load(path.join(statesDir, data.system.state, 'view.xml'));
                 const parser = sax.parser(false, { lowercase: true });
                 let shortMessage = '';
                 parser.ontext = function(text) {
