@@ -1,3 +1,7 @@
+## [7.1.10](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.9...v7.1.10) (2021-05-26)
+
+
+
 ## [7.1.9](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.8...v7.1.9) (2021-04-07)
 
 
