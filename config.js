@@ -93,6 +93,16 @@ module.exports = () => ({
             defaultShortCode: joi.string(),
             defaultPhone: joi.string(),
             identity: joi.boolean(),
+            expireRule: joi.string(),
+            timeOut: joi.number(),
+            maintenanceModeState: joi.string(),
+            wrongInputState: joi.string(),
+            resumeState: joi.string(),
+            strings: joi.array().items(
+                joi.string()
+            ),
+            charsCount: joi.boolean(),
+            slogan: joi.string(),
             routes: joi.object({
                 common: joi.object(),
                 public: joi.object(),
