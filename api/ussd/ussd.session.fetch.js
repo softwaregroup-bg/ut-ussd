@@ -1,5 +1,10 @@
 // @ts-check
 /** @type { import("../../handlers").handlerFactory } */
+const text1 = (a1, a2) =>
+    `<div style="border-bottom: 1px dashed grey; padding: 20px">${a1}: ${a2}</div>`;
+const text2 = (a1) =>
+    `<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">${a1}</span>`;
+
 module.exports = ({
     lib: {
         sessions
@@ -12,15 +17,15 @@ module.exports = ({
             response = 'db empty';
         } else {
             data.forEach(function(record) {
-                response += '<div style="border-bottom: 1px dashed grey; padding: 20px">' +
-                    record.key + ': ' + JSON.stringify(record.value, null, 4) +
-                    '</div>';
+                response += text1(
+                    record.key,
+                    JSON.stringify(record.value, null, 4)
+                );
             });
         }
-        return '<span style="white-space: pre; font-family: \'Courier New\', Courier, monospace">' +
-            response +
-            '</span>';
+        return text2(response);
     };
+
     return {
         'ussd.session.fetch': fetch,
         'ussd.session.fetchRest': fetch

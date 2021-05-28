@@ -81,8 +81,13 @@ module.exports = ({
                         let data = session;
                         let loop = false;
                         while (commands.length) {
-                            data = await engine.route(engine.receive(data));
-                            if (i && data.system.state === data.system.prevState) {
+                            data = await engine.route(
+                                engine.receive(data)
+                            );
+                            if (
+                                i &&
+                                data.system.state === data.system.prevState
+                            ) {
                             // if states match and flow wasn't previously interrupted (i.e the code here should never execute for the first when.iterate cycle)
                                 commands.splice(1);
                                 loop = true;
@@ -92,14 +97,23 @@ module.exports = ({
                             engine.render(data);
                             delete data.system.ussdString;
                             sessions.set(data);
-                            data.system.ussdMessage = commands.shift();
+                            data.system.ussdMessage = commands
+                                .shift();
                             i += 1;
                         };
                         if (!loop) {
-                            await engine.send(await engine.route(await engine.receive(data)));
+                            await engine.send(
+                                await engine.route(
+                                    await engine.receive(data)
+                                )
+                            );
                         }
                     }
-                    if (!session.system.state && Array.isArray(strings) && ~strings.indexOf(msg.ussdMessage)) { // ussd string
+                    if (
+                        !session.system.state &&
+                        Array.isArray(strings) &&
+                        ~strings.indexOf(msg.ussdMessage)
+                    ) { // ussd string
                         session.system.ussdString = msg.ussdMessage.split(/[*#]/).slice(1, -1);
                         session.system.ussdMessage = '*' + session.system.ussdString.shift() + '#';
                     } else {
@@ -109,7 +123,11 @@ module.exports = ({
                         // @ts-ignore
                         session.system.config = config;
                     }
-                    const data = await engine.send(await engine.route(await engine.receive(session)));
+                    const data = await engine.send(
+                        await engine.route(
+                            await engine.receive(session)
+                        )
+                    );
                     const result = await engine.render(data);
                     await sessions.set(data);
                     if (debug) {
@@ -132,7 +150,13 @@ module.exports = ({
                 if (debug) {
                     return {
                         // @ts-ignore
-                        shortMessage: (error instanceof Error) ? error.ussdMessage : (typeof error === 'string' ? error : 'System Error!'),
+                        shortMessage: (error instanceof Error)
+                            ? error.ussdMessage
+                            : (
+                                typeof error === 'string'
+                                ? error
+                                : 'System Error!'
+                            ),
                         sourceAddr: msg.phone
                     };
                 }
