@@ -151,12 +151,12 @@ module.exports = ({
                     return {
                         // @ts-ignore
                         shortMessage: (error instanceof Error)
-                                ? error.ussdMessage
-                                : (
-                                    typeof error === 'string'
-                                        ? error
-                                        : 'System Error!'
-                                ),
+                            ? error.ussdMessage
+                            : (
+                                typeof error === 'string'
+                                    ? error
+                                    : 'System Error!'
+                            ),
                         sourceAddr: msg.phone
                     };
                 }
