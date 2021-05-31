@@ -1,3 +1,12 @@
+## [7.1.11](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.10...v7.1.11) (2021-05-31)
+
+
+### Bug Fixes
+
+*  UTCORE-128 ([70329ad](https://github.com/softwaregroup-bg/ut-ussd/commit/70329ada0fa089b95b0ecb619e6887a9aead173f))
+
+
+
 ## [7.1.10](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.9...v7.1.10) (2021-05-26)
 
 
