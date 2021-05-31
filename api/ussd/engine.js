@@ -41,7 +41,8 @@ module.exports = ({
         baseDir: statesDir,
         defaultShortCode,
         defaultPhone,
-        shortCodes
+        shortCodes,
+        wrongInputState
     } = config;
     let hooks;
     try {
@@ -73,7 +74,7 @@ module.exports = ({
                     newState = backtrack[backtrack.length - 2];
                 }
             } else {
-                newState = config.wrongInputState ||
+                newState = wrongInputState ||
                 'menu/error/wrongInput';
             }
             newState = util.normalizeState(state, newState);
