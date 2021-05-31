@@ -14,7 +14,10 @@ module.exports = {
         }
     },
     parseRequestParams: function(data) {
-        const parsedUrl = new URL(data.system.state, 'http://localhost');
+        const parsedUrl = new URL(
+            data.system.state,
+            'http://localhost'
+        );
         data.system.state = parsedUrl.pathname;
         data.system.requestParams = parsedUrl.searchParams;
     },
@@ -24,6 +27,8 @@ module.exports = {
         });
     },
     normalizeState(dir, state) {
-        return state.startsWith('.') ? path.join(dir, state) : state;
+        return state.startsWith('.')
+            ? path.join(dir, state)
+            : state;
     }
 };
