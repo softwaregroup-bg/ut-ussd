@@ -13,12 +13,11 @@ const buildResponse = ({
     }
 }) => function(data) {
     const x = merge({
-            errorCode: 0,
-            errorMessage: '',
-            shortMessage: 'no ussdMessage provided'
-        },
-        data
-    );
+        errorCode: 0,
+        errorMessage: '',
+        shortMessage: 'no ussdMessage provided'
+    }, data);
+
     return {
         ...(x.errorCode !== 0) && {
             error: {
@@ -31,7 +30,7 @@ const buildResponse = ({
         defaultCode: defaultShortCode,
         phoneNumber: defaultPhone
     };
-}
+};
 
 /** @type { import("../../handlers").libFactory } */
 module.exports = ({
@@ -132,8 +131,8 @@ module.exports = ({
                     system.routes = {
                         redirect: (
                             typeof state === 'string'
-                            ? state
-                            : state.href
+                                ? state
+                                : state.href
                         )
                     };
                     system.ussdMessage = 'redirect';
@@ -155,25 +154,25 @@ module.exports = ({
             tasks.push(
                 async params =>
                     redirect
-                    ? params
-                    : await formatResult(
-                        await send.call(
-                            context,
-                            params
+                        ? params
+                        : await formatResult(
+                            await send.call(
+                                context,
+                                params
+                            )
                         )
-                    )
             );
             if (hooks.afterSend) {
                 tasks.push(
                     async params =>
                         redirect
-                        ? params
-                        : await formatResult(
-                            await hooks.afterSend.call(
-                                context,
-                                params
+                            ? params
+                            : await formatResult(
+                                await hooks.afterSend.call(
+                                    context,
+                                    params
+                                )
                             )
-                        )
                 );
             }
             try {
@@ -246,9 +245,9 @@ module.exports = ({
                 redirect: function(state) {
                     system.routes = {
                         redirect: (
-                            typeof state === 'string' ?
-                            state :
-                            state.href
+                            typeof state === 'string'
+                                ? state
+                                : state.href
                         )
                     };
                     system.ussdMessage = 'redirect';
@@ -276,44 +275,47 @@ module.exports = ({
                 tasks.push(
                     async params =>
                         redirect
-                        ? params
-                        : formatResult(
-                            await hooks.resume.call(context, params)
-                        )
+                            ? params
+                            : formatResult(
+                                await hooks.resume.call(context, params)
+                            )
                 );
             }
             if (hooks.beforeReceive) {
                 tasks.push(
                     async params =>
                         redirect
-                        ? params
-                        : formatResult(
-                            await hooks.beforeReceive.call(
-                                context,
-                                params
+                            ? params
+                            : formatResult(
+                                await hooks.beforeReceive.call(
+                                    context,
+                                    params
+                                )
                             )
-                        )
                 );
             }
             tasks.push(
                 async params =>
                     redirect
-                    ? params
-                    : formatResult(
-                        await receive.call(context, params)
-                    )
+                        ? params
+                        : formatResult(
+                            await receive.call(
+                                context,
+                                params
+                            )
+                        )
             );
             if (hooks.afterReceive) {
                 tasks.push(
                     async params =>
                         redirect
-                        ? params
-                        : formatResult(
-                            await hooks.afterReceive.call(
-                                context,
-                                params
+                            ? params
+                            : formatResult(
+                                await hooks.afterReceive.call(
+                                    context,
+                                    params
+                                )
                             )
-                        )
                 );
             }
             tasks.push(function(params) {
@@ -329,9 +331,9 @@ module.exports = ({
                 }
             } catch (error) {
                 const err = new Error((
-                    (error.ussdMessage || '')
-                    + ' | js error thrown by controller at state '
-                    + (system && system.state)
+                    (error.ussdMessage || '') +
+                    ' | js error thrown by controller at state ' +
+                    (system && system.state)
                 ));
                 // @ts-ignore
                 err.cause = error;
@@ -346,8 +348,9 @@ module.exports = ({
                 const text = strings
                     .map((string, index) =>
                         index < values.length
-                        ? string + values[index]
-                        : string).join('');
+                            ? string + values[index]
+                            : string
+                    ).join('');
                 // Translate it if possible
                 return (
                     data.translations &&
