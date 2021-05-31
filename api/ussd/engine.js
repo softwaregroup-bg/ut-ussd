@@ -7,10 +7,8 @@ const loadTemplate = require('ut-function.template');
 const util = require('./util');
 
 const buildResponse = ({
-    config: {
-        defaultShortCode,
-        defaultPhone
-    }
+    defaultShortCode,
+    defaultPhone
 }) => function(data) {
     const x = merge({
         errorCode: 0,
@@ -39,7 +37,12 @@ module.exports = ({
     vfs,
     import: imp
 }) => {
-    const statesDir = config.baseDir;
+    const {
+        baseDir: statesDir,
+        defaultShortCode,
+        defaultPhone,
+        shortCodes
+    } = config;
     let hooks;
     try {
         hooks = require(path.join(statesDir, 'hooks.js'));
@@ -47,7 +50,10 @@ module.exports = ({
         hooks = {};
     }
     const engine = {
-        buildResponse: buildResponse({config}),
+        buildResponse: buildResponse({
+            defaultShortCode,
+            defaultPhone
+        }),
         route(data) {
             const {
                 system: {
@@ -59,8 +65,8 @@ module.exports = ({
             } = data;
 
             let newState;
-            if (config.shortCodes[ussdMessage]) {
-                newState = config.shortCodes[ussdMessage];
+            if (shortCodes[ussdMessage]) {
+                newState = shortCodes[ussdMessage];
             } else if (routes[ussdMessage] || routes['*']) {
                 newState = routes[ussdMessage] || routes['*'];
                 if (newState === 'back') {
