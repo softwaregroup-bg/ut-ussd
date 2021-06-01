@@ -4,9 +4,10 @@ const cloneDeep = require('lodash.clonedeep');
 const path = require('path');
 const sax = require('sax');
 const loadTemplate = require('ut-function.template');
-const util = require('./util');
 const {
-    normalizeState
+    normalizeState,
+    parseRequestParams,
+    backtrack: backtrackFn
 } = require('./util');
 
 const buildResponse = ({
@@ -114,8 +115,8 @@ module.exports = ({
             newState = normalizeState(state, newState);
             data.system.prevState = state;
             data.system.state = newState;
-            util.backtrack(data);
-            util.parseRequestParams(data);
+            backtrackFn(data);
+            parseRequestParams(data);
             return data;
         },
         async send(data) {
