@@ -33,6 +33,37 @@ const buildResponse = ({
     };
 };
 
+const loadController = async({
+    statesDir,
+    data,
+    imp,
+    direction = 'send'
+}) => {
+    const def = x => (x);
+    try {
+        const controllerPath = require.resolve(
+            path.join(
+                statesDir,
+                data.system.state,
+                'controller.js'
+            )
+        );
+        if (controllerPath) {
+            const controller = require(controllerPath);
+            if (typeof controller === 'function') {
+                return (
+                    await controller({import: imp})
+                )[direction] || def;
+            } else if (typeof (controller && controller[direction]) === 'function') {
+                return controller[direction] || def;
+            }
+            return def;
+        }
+    } catch (e) {
+        return def;
+    }
+};
+
 /** @type { import("../../handlers").libFactory } */
 module.exports = ({
     config,
@@ -89,26 +120,11 @@ module.exports = ({
         },
         async send(data) {
             // initialization
-            let controllerPath;
-            let controller;
-            let send;
-            try {
-                controllerPath = require.resolve(path.join(
-                    statesDir,
-                    data.system.state,
-                    'controller.js'
-                ));
-            } catch (e) {
-            }
-            if (controllerPath) {
-                controller = require(controllerPath);
-                if (typeof controller === 'function') {
-                    send = (await controller({import: imp})).send;
-                } else if (typeof (controller && controller.send) === 'function') {
-                    send = controller.send;
-                }
-            }
-            send = send || (x => x);
+            const send = await loadController({
+                statesDir,
+                data,
+                imp
+            });
             // logic
             const system = cloneDeep(data.system);
             async function formatResultSend(result) {
@@ -204,28 +220,12 @@ module.exports = ({
         async receive(data) {
             if (!data.system.state) return data;
             // initialization
-            let controllerPath;
-            let controller;
-            let receive;
-            try {
-                controllerPath = require.resolve(
-                    path.join(
-                        statesDir,
-                        data.system.state,
-                        'controller.js'
-                    )
-                );
-            } catch (e) {
-            }
-            if (controllerPath) {
-                controller = require(controllerPath);
-                if (typeof controller === 'function') {
-                    receive = (await controller({import: imp})).receive;
-                } else if (typeof (controller && controller.receive) === 'function') {
-                    receive = controller.receive;
-                }
-            }
-            receive = receive || (x => x);
+            const receive = (await loadController({
+                statesDir,
+                imp,
+                data,
+                direction: 'receive'
+            }));
             // logic
             let system;
             function formatResultReceive(result) {
