@@ -5,6 +5,9 @@ const path = require('path');
 const sax = require('sax');
 const loadTemplate = require('ut-function.template');
 const util = require('./util');
+const {
+    normalizeState
+} = require('./util');
 
 const buildResponse = ({
     defaultShortCode,
@@ -77,7 +80,7 @@ module.exports = ({
                 newState = wrongInputState ||
                 'menu/error/wrongInput';
             }
-            newState = util.normalizeState(state, newState);
+            newState = normalizeState(state, newState);
             data.system.prevState = state;
             data.system.state = newState;
             util.backtrack(data);
@@ -108,7 +111,7 @@ module.exports = ({
             send = send || (x => x);
             // logic
             const system = cloneDeep(data.system);
-            async function formatResult(result) {
+            async function formatResultSend(result) {
                 let formattedResult = {};
                 if (!data) {
                     data = {};
@@ -150,7 +153,7 @@ module.exports = ({
             if (hooks.beforeSend) {
                 tasks.push(
                     async params =>
-                        await formatResult(
+                        await formatResultSend(
                             await hooks.beforeSend.call(
                                 context,
                                 params
@@ -162,7 +165,7 @@ module.exports = ({
                 async params =>
                     redirect
                         ? params
-                        : await formatResult(
+                        : await formatResultSend(
                             await send.call(
                                 context,
                                 params
@@ -174,7 +177,7 @@ module.exports = ({
                     async params =>
                         redirect
                             ? params
-                            : await formatResult(
+                            : await formatResultSend(
                                 await hooks.afterSend.call(
                                     context,
                                     params
@@ -225,7 +228,7 @@ module.exports = ({
             receive = receive || (x => x);
             // logic
             let system;
-            function formatResult(result) {
+            function formatResultReceive(result) {
                 let formattedResult = {};
                 if (!data) {
                     data = {};
@@ -283,7 +286,7 @@ module.exports = ({
                     async params =>
                         redirect
                             ? params
-                            : formatResult(
+                            : formatResultReceive(
                                 await hooks.resume.call(context, params)
                             )
                 );
@@ -293,7 +296,7 @@ module.exports = ({
                     async params =>
                         redirect
                             ? params
-                            : formatResult(
+                            : formatResultReceive(
                                 await hooks.beforeReceive.call(
                                     context,
                                     params
@@ -305,7 +308,7 @@ module.exports = ({
                 async params =>
                     redirect
                         ? params
-                        : formatResult(
+                        : formatResultReceive(
                             await receive.call(
                                 context,
                                 params
@@ -317,7 +320,7 @@ module.exports = ({
                     async params =>
                         redirect
                             ? params
-                            : formatResult(
+                            : formatResultReceive(
                                 await hooks.afterReceive.call(
                                     context,
                                     params
@@ -393,34 +396,38 @@ module.exports = ({
                     false,
                     {lowercase: true}
                 );
-                let shortMessage = '';
-                parser.ontext = function(text) {
-                    shortMessage += text;
-                };
-                parser.onopentag = function(tag) {
-                    if (tag.name === 'br') {
-                        shortMessage += '\n';
-                    } else if (
-                        tag.name === 'a' &&
-                        tag.attributes.id &&
-                        tag.attributes.href
-                    ) {
-                        data.system.routes[tag.attributes.id.toString()] = util.normalizeState(data.system.state, tag.attributes.href);
+                let shortMessage = [];
+                parser.ontext = text => shortMessage.push(text);
+                parser.onopentag = ({
+                    name, attributes: {id, href}
+                }) => {
+                    if (name === 'br') {
+                        shortMessage.push('\n');
+                    } else if (name === 'a' && id && href) {
+                        data.system.routes[id.toString()] =
+                            normalizeState(
+                                data.system.state,
+                                href
+                            );
                     }
                 };
                 data.system.routes = {};
-                return await new Promise(function(resolve, reject) {
-                    parser.onend = function() {
+                return await new Promise((resolve, reject) => {
+                    parser.onend = () => {
                         resolve({
-                            shortMessage: shortMessage,
+                            shortMessage: shortMessage.join(''),
                             sourceAddr: data.system.phone
                         });
                     };
                     parser.onerror = reject;
-                    parser.write('<root>' + result + '</root>').close();
+                    parser.write(`<root>${result}</root>`)
+                        .close();
                 });
             } catch (err) {
-                const error = new Error('template load error: ' + (err.ussdMessage || ''));
+                const error = new Error(
+                    'template load error: ' +
+                    (err.ussdMessage || '')
+                );
                 // @ts-ignore
                 error.cause = err;
                 throw error;
