@@ -397,7 +397,7 @@ module.exports = ({
                     false,
                     {lowercase: true}
                 );
-                let shortMessage = [];
+                const shortMessage = [];
                 parser.ontext = text => shortMessage.push(text);
                 parser.onopentag = ({
                     name, attributes: {id, href}
