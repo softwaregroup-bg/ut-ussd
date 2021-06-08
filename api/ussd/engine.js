@@ -4,13 +4,15 @@ const cloneDeep = require('lodash.clonedeep');
 const path = require('path');
 const sax = require('sax');
 const loadTemplate = require('ut-function.template');
-const util = require('./util');
+const {
+    normalizeState,
+    parseRequestParams,
+    backtrack: backtrackFn
+} = require('./util');
 
 const buildResponse = ({
-    config: {
-        defaultShortCode,
-        defaultPhone
-    }
+    defaultShortCode,
+    defaultPhone
 }) => function(data) {
     const x = merge({
         errorCode: 0,
@@ -32,6 +34,37 @@ const buildResponse = ({
     };
 };
 
+const loadController = async({
+    statesDir,
+    data,
+    imp,
+    direction = 'send'
+}) => {
+    const def = x => (x);
+    try {
+        const controllerPath = require.resolve(
+            path.join(
+                statesDir,
+                data.system.state,
+                'controller.js'
+            )
+        );
+        if (controllerPath) {
+            const controller = require(controllerPath);
+            if (typeof controller === 'function') {
+                return (
+                    await controller({import: imp})
+                )[direction] || def;
+            } else if (typeof (controller && controller[direction]) === 'function') {
+                return controller[direction] || def;
+            }
+            return def;
+        }
+    } catch (e) {
+        return def;
+    }
+};
+
 /** @type { import("../../handlers").libFactory } */
 module.exports = ({
     config,
@@ -39,7 +72,13 @@ module.exports = ({
     vfs,
     import: imp
 }) => {
-    const statesDir = config.baseDir;
+    const {
+        baseDir: statesDir,
+        defaultShortCode,
+        defaultPhone,
+        shortCodes,
+        wrongInputState
+    } = config;
     let hooks;
     try {
         hooks = require(path.join(statesDir, 'hooks.js'));
@@ -47,7 +86,10 @@ module.exports = ({
         hooks = {};
     }
     const engine = {
-        buildResponse: buildResponse({config}),
+        buildResponse: buildResponse({
+            defaultShortCode,
+            defaultPhone
+        }),
         route(data) {
             const {
                 system: {
@@ -59,49 +101,34 @@ module.exports = ({
             } = data;
 
             let newState;
-            if (config.shortCodes[ussdMessage]) {
-                newState = config.shortCodes[ussdMessage];
+            if (shortCodes[ussdMessage]) {
+                newState = shortCodes[ussdMessage];
             } else if (routes[ussdMessage] || routes['*']) {
                 newState = routes[ussdMessage] || routes['*'];
                 if (newState === 'back') {
                     newState = backtrack[backtrack.length - 2];
                 }
             } else {
-                newState = config.wrongInputState ||
+                newState = wrongInputState ||
                 'menu/error/wrongInput';
             }
-            newState = util.normalizeState(state, newState);
+            newState = normalizeState(state, newState);
             data.system.prevState = state;
             data.system.state = newState;
-            util.backtrack(data);
-            util.parseRequestParams(data);
+            backtrackFn(data);
+            parseRequestParams(data);
             return data;
         },
         async send(data) {
             // initialization
-            let controllerPath;
-            let controller;
-            let send;
-            try {
-                controllerPath = require.resolve(path.join(
-                    statesDir,
-                    data.system.state,
-                    'controller.js'
-                ));
-            } catch (e) {
-            }
-            if (controllerPath) {
-                controller = require(controllerPath);
-                if (typeof controller === 'function') {
-                    send = (await controller({import: imp})).send;
-                } else if (typeof (controller && controller.send) === 'function') {
-                    send = controller.send;
-                }
-            }
-            send = send || (x => x);
+            const send = await loadController({
+                statesDir,
+                data,
+                imp
+            });
             // logic
             const system = cloneDeep(data.system);
-            async function formatResult(result) {
+            async function formatResultSend(result) {
                 let formattedResult = {};
                 if (!data) {
                     data = {};
@@ -143,7 +170,7 @@ module.exports = ({
             if (hooks.beforeSend) {
                 tasks.push(
                     async params =>
-                        await formatResult(
+                        await formatResultSend(
                             await hooks.beforeSend.call(
                                 context,
                                 params
@@ -155,7 +182,7 @@ module.exports = ({
                 async params =>
                     redirect
                         ? params
-                        : await formatResult(
+                        : await formatResultSend(
                             await send.call(
                                 context,
                                 params
@@ -167,7 +194,7 @@ module.exports = ({
                     async params =>
                         redirect
                             ? params
-                            : await formatResult(
+                            : await formatResultSend(
                                 await hooks.afterSend.call(
                                     context,
                                     params
@@ -194,31 +221,15 @@ module.exports = ({
         async receive(data) {
             if (!data.system.state) return data;
             // initialization
-            let controllerPath;
-            let controller;
-            let receive;
-            try {
-                controllerPath = require.resolve(
-                    path.join(
-                        statesDir,
-                        data.system.state,
-                        'controller.js'
-                    )
-                );
-            } catch (e) {
-            }
-            if (controllerPath) {
-                controller = require(controllerPath);
-                if (typeof controller === 'function') {
-                    receive = (await controller({import: imp})).receive;
-                } else if (typeof (controller && controller.receive) === 'function') {
-                    receive = controller.receive;
-                }
-            }
-            receive = receive || (x => x);
+            const receive = (await loadController({
+                statesDir,
+                imp,
+                data,
+                direction: 'receive'
+            }));
             // logic
             let system;
-            function formatResult(result) {
+            function formatResultReceive(result) {
                 let formattedResult = {};
                 if (!data) {
                     data = {};
@@ -276,7 +287,7 @@ module.exports = ({
                     async params =>
                         redirect
                             ? params
-                            : formatResult(
+                            : formatResultReceive(
                                 await hooks.resume.call(context, params)
                             )
                 );
@@ -286,7 +297,7 @@ module.exports = ({
                     async params =>
                         redirect
                             ? params
-                            : formatResult(
+                            : formatResultReceive(
                                 await hooks.beforeReceive.call(
                                     context,
                                     params
@@ -298,7 +309,7 @@ module.exports = ({
                 async params =>
                     redirect
                         ? params
-                        : formatResult(
+                        : formatResultReceive(
                             await receive.call(
                                 context,
                                 params
@@ -310,7 +321,7 @@ module.exports = ({
                     async params =>
                         redirect
                             ? params
-                            : formatResult(
+                            : formatResultReceive(
                                 await hooks.afterReceive.call(
                                     context,
                                     params
@@ -386,34 +397,38 @@ module.exports = ({
                     false,
                     {lowercase: true}
                 );
-                let shortMessage = '';
-                parser.ontext = function(text) {
-                    shortMessage += text;
-                };
-                parser.onopentag = function(tag) {
-                    if (tag.name === 'br') {
-                        shortMessage += '\n';
-                    } else if (
-                        tag.name === 'a' &&
-                        tag.attributes.id &&
-                        tag.attributes.href
-                    ) {
-                        data.system.routes[tag.attributes.id.toString()] = util.normalizeState(data.system.state, tag.attributes.href);
+                const shortMessage = [];
+                parser.ontext = text => shortMessage.push(text);
+                parser.onopentag = ({
+                    name, attributes: {id, href}
+                }) => {
+                    if (name === 'br') {
+                        shortMessage.push('\n');
+                    } else if (name === 'a' && id && href) {
+                        data.system.routes[id.toString()] =
+                            normalizeState(
+                                data.system.state,
+                                href
+                            );
                     }
                 };
                 data.system.routes = {};
-                return await new Promise(function(resolve, reject) {
-                    parser.onend = function() {
+                return await new Promise((resolve, reject) => {
+                    parser.onend = () => {
                         resolve({
-                            shortMessage: shortMessage,
+                            shortMessage: shortMessage.join(''),
                             sourceAddr: data.system.phone
                         });
                     };
                     parser.onerror = reject;
-                    parser.write('<root>' + result + '</root>').close();
+                    parser.write(`<root>${result}</root>`)
+                        .close();
                 });
             } catch (err) {
-                const error = new Error('template load error: ' + (err.ussdMessage || ''));
+                const error = new Error(
+                    'template load error: ' +
+                    (err.ussdMessage || '')
+                );
                 // @ts-ignore
                 error.cause = err;
                 throw error;
