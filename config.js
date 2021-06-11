@@ -13,6 +13,7 @@ module.exports = () => ({
     // environments
     common: {
         ussd: {
+            translations: {},
             shortCodes: {},
             defaultShortCode: '*123#',
             defaultPhone: '0888',
@@ -89,6 +90,7 @@ module.exports = () => ({
         ],
         ussd: joi.object({
             baseDir: joi.string().required(),
+            translations: joi.object(),
             shortCodes: joi.object(),
             defaultShortCode: joi.string(),
             defaultPhone: joi.string(),
