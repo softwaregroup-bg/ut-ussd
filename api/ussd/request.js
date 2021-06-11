@@ -12,6 +12,7 @@ module.exports = ({
     }
 }) => {
     const {
+        translations = {},
         maintenanceModeState,
         identity,
         expireRule,
@@ -27,7 +28,12 @@ module.exports = ({
     }
 
     return {
-        async request(msg) {
+        async request({
+            phone,
+            newSession,
+            ussdMessage,
+            language
+        }) {
             try {
                 try {
                     const globalConfig = await sessions.get('globalConfig');
@@ -37,33 +43,33 @@ module.exports = ({
                         e.state = maintenanceModeState;
                         throw e;
                     }
-                    let session = await sessions.get(msg.phone);
-                    if (!session || msg.newSession) { // no session
+                    let session = await sessions.get(phone);
+                    if (!session || newSession) { // no session
                         if (identity) {
                             const identityGet = await dbIdentity({
-                                username: msg.phone,
+                                username: phone,
                                 type: 'password'
                             });
                             session = {
                                 system: {
                                     expire: getExpirationTime(),
-                                    phone: msg.phone,
+                                    phone: phone,
                                     backtrack: [],
                                     routes: {},
                                     meta: {
                                         auth: identityGet.hashParams[0]
                                     },
-                                    newSession: msg.newSession
+                                    newSession: newSession
                                 }
                             };
                         } else {
                             session = {
                                 system: {
                                     expire: getExpirationTime(),
-                                    phone: msg.phone,
+                                    phone: phone,
                                     backtrack: [],
                                     routes: {},
-                                    newSession: msg.newSession
+                                    newSession: newSession
                                 }
                             };
                         }
@@ -76,8 +82,8 @@ module.exports = ({
                         delete session.system.newSession;
                     }
                     if (session.system.ussdString) {
-                        const commands = [msg.ussdMessage].concat(session.system.ussdString);
-                        let i = 0; // iterration counter
+                        const commands = [ussdMessage].concat(session.system.ussdString);
+                        let i = 0; // iteration counter
                         let data = session;
                         let loop = false;
                         while (commands.length) {
@@ -112,12 +118,12 @@ module.exports = ({
                     if (
                         !session.system.state &&
                         Array.isArray(strings) &&
-                        ~strings.indexOf(msg.ussdMessage)
+                        ~strings.indexOf(ussdMessage)
                     ) { // ussd string
-                        session.system.ussdString = msg.ussdMessage.split(/[*#]/).slice(1, -1);
+                        session.system.ussdString = ussdMessage.split(/[*#]/).slice(1, -1);
                         session.system.ussdMessage = '*' + session.system.ussdString.shift() + '#';
                     } else {
-                        session.system.ussdMessage = msg.ussdMessage;
+                        session.system.ussdMessage = ussdMessage;
                     }
                     if (session.system) {
                         // @ts-ignore
@@ -128,7 +134,10 @@ module.exports = ({
                             await engine.receive(session)
                         )
                     );
-                    const result = await engine.render(data);
+                    const result = await engine.render({
+                        translations: translations[language] || {},
+                        ...data
+                    });
                     await sessions.set(data);
                     if (debug) {
                         result.debug = data;
@@ -139,8 +148,8 @@ module.exports = ({
                         return await engine.render(await engine.send({
                             system: {
                                 state: error.state,
-                                phone: msg.phone,
-                                ussdMessage: msg.ussdMessage
+                                phone: phone,
+                                ussdMessage: ussdMessage
                             }
                         }));
                     }
@@ -157,7 +166,7 @@ module.exports = ({
                                     ? error
                                     : 'System Error!'
                             ),
-                        sourceAddr: msg.phone
+                        sourceAddr: phone
                     };
                 }
                 throw error;
