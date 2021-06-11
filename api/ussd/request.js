@@ -53,23 +53,23 @@ module.exports = ({
                             session = {
                                 system: {
                                     expire: getExpirationTime(),
-                                    phone: phone,
+                                    phone,
                                     backtrack: [],
                                     routes: {},
                                     meta: {
                                         auth: identityGet.hashParams[0]
                                     },
-                                    newSession: newSession
+                                    newSession
                                 }
                             };
                         } else {
                             session = {
                                 system: {
                                     expire: getExpirationTime(),
-                                    phone: phone,
+                                    phone,
                                     backtrack: [],
                                     routes: {},
-                                    newSession: newSession
+                                    newSession
                                 }
                             };
                         }
@@ -148,8 +148,8 @@ module.exports = ({
                         return await engine.render(await engine.send({
                             system: {
                                 state: error.state,
-                                phone: phone,
-                                ussdMessage: ussdMessage
+                                phone,
+                                ussdMessage
                             }
                         }));
                     }
