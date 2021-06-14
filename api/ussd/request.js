@@ -50,7 +50,7 @@ module.exports = ({
                                 username: phone,
                                 type: 'password'
                             });
-                            session = {
+                            await sessions.set(phone, {
                                 system: {
                                     expire: getExpirationTime(),
                                     phone,
@@ -61,9 +61,9 @@ module.exports = ({
                                     },
                                     newSession
                                 }
-                            };
+                            });
                         } else {
-                            session = {
+                            await sessions.set(phone, {
                                 system: {
                                     expire: getExpirationTime(),
                                     phone,
@@ -71,18 +71,41 @@ module.exports = ({
                                     routes: {},
                                     newSession
                                 }
-                            };
+                            });
                         }
                     } else if (new Date(session.system.expire) < new Date()) { // session expired
-                        session.system.resume = true;
-                        session.system.expire = getExpirationTime();
-                        delete session.system.newSession;
+                        await sessions.setByPath(
+                            phone,
+                            ['system', 'resume'],
+                            true
+                        );
+                        await sessions.setByPath(
+                            phone,
+                            ['system', 'expire'],
+                            getExpirationTime()
+                        );
+                        await sessions.setByPath(
+                            phone,
+                            ['system', 'newSession'],
+                            undefined
+                        );
                     } else if (expireRule === 'refresh') {
-                        session.system.expire = getExpirationTime();
-                        delete session.system.newSession;
+                        await sessions.setByPath(
+                            phone,
+                            ['system', 'expire'],
+                            getExpirationTime()
+                        );
+                        await sessions.setByPath(
+                            phone,
+                            ['system', 'newSession'],
+                            undefined
+                        );
                     }
+                    session = await sessions.get(phone);
                     if (session.system.ussdString) {
-                        const commands = [ussdMessage].concat(session.system.ussdString);
+                        const commands = [ussdMessage].concat(
+                            session.system.ussdString
+                        );
                         let i = 0; // iteration counter
                         let data = session;
                         let loop = false;
@@ -120,14 +143,31 @@ module.exports = ({
                         Array.isArray(strings) &&
                         ~strings.indexOf(ussdMessage)
                     ) { // ussd string
-                        session.system.ussdString = ussdMessage.split(/[*#]/).slice(1, -1);
-                        session.system.ussdMessage = '*' + session.system.ussdString.shift() + '#';
+                        await sessions.setByPath(
+                            phone,
+                            ['system', 'ussdString'],
+                            ussdMessage.split(/[*#]/).slice(1, -1)
+                        );
+                        await sessions.setByPath(
+                            phone,
+                            ['system', 'ussdMessage'],
+                            `*${session.system.ussdString.shift()}#`
+                        );
                     } else {
-                        session.system.ussdMessage = ussdMessage;
+                        await sessions.setByPath(
+                            phone,
+                            ['system', 'ussdMessage'],
+                            ussdMessage
+                        );
                     }
+                    session = await sessions.get(phone);
                     if (session.system) {
                         // @ts-ignore
-                        session.system.config = config;
+                        await sessions.setByPath(
+                            phone,
+                            ['system', 'config'],
+                            config
+                        );
                     }
                     const data = await engine.send(
                         await engine.route(

@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
         "USSD"
-    ]
+    ],
+    "dimmer.enabled": true
 }

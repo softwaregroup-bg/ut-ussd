@@ -22,6 +22,23 @@ module.exports = () => {
 
     const cacheSession = new Cache();
 
+    const setByPath = (
+        path,
+        val,
+        obj
+    ) => {
+        if (val == null) {
+            return obj;
+        }
+        if (path.length) {
+            const node = path.shift();
+            obj[node] = setByPath(path, val, obj[node] || {});
+            return obj;
+        } else {
+            return val;
+        }
+    };
+
     return {
         sessions: {
             get: async key => cacheSession.get(key),
@@ -33,6 +50,12 @@ module.exports = () => {
                 }
                 await cacheSession.set(key, value);
                 return value;
+            },
+            setByPath: async(key, path, value) => {
+                const s = await cacheSession.get(key);
+                const sn = setByPath(path, value, s);
+                await cacheSession.set(key, sn);
+                return cacheSession.get(key);
             }
         }
     };
