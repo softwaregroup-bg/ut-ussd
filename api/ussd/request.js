@@ -185,13 +185,17 @@ module.exports = ({
                     return result;
                 } catch (error) {
                     if (error.state) {
-                        return await engine.render(await engine.send({
+                        const data = await engine.send({
                             system: {
                                 state: error.state,
                                 phone,
                                 ussdMessage
                             }
-                        }));
+                        });
+                        return await engine.render({
+                            translations: translations[language] || {},
+                            ...data
+                        });
                     }
                     throw error;
                 }
