@@ -36,13 +36,18 @@ module.exports = ({
         }) {
             try {
                 try {
-                    const globalConfig = await sessions.get('globalConfig');
-                    if (globalConfig && globalConfig.maintenanceMode) {
+                    const {
+                        maintenanceMode
+                    } = (await sessions.get('globalConfig')) ||
+                        {};
+
+                    if (maintenanceMode) {
                         const e = new Error('Maintenance mode.\nPlease try again later.');
                         // @ts-ignore
                         e.state = maintenanceModeState;
                         throw e;
                     }
+
                     let session = await sessions.get(phone);
                     if (!session || newSession) { // no session
                         if (identity) {
@@ -117,15 +122,20 @@ module.exports = ({
                                 i &&
                                 data.system.state === data.system.prevState
                             ) {
-                            // if states match and flow wasn't previously interrupted (i.e the code here should never execute for the first when.iterate cycle)
+                            // if states match and flow wasn't previously interrupted
+                            // (i.e the code here should never execute for the
+                            // first when.iterate cycle)
                                 commands.splice(1);
                                 loop = true;
                                 break;
                             }
                             data = await engine.send(data);
-                            engine.render(data);
+                            engine.render({
+                                translations: translations[language] || {},
+                                ...data
+                            });
                             delete data.system.ussdString;
-                            sessions.set(data);
+                            await sessions.set(data);
                             data.system.ussdMessage = commands
                                 .shift();
                             i += 1;
