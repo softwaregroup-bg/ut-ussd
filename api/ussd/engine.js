@@ -78,6 +78,33 @@ const ctxRedirect = (globObj) => (state) => {
     return true;
 };
 
+const taskPush = (
+    context,
+    fr,
+    fn
+) => async params =>
+    await fr(
+        await fn.call(
+            context,
+            params
+        )
+    );
+
+const taskPushRedirect = (
+    redirect,
+    context,
+    formatResult,
+    fn
+) => async params =>
+    redirect
+        ? params
+        : await formatResult(
+            await fn.call(
+                context,
+                params
+            )
+        );
+
 /** @type { import("../../handlers").libFactory } */
 module.exports = ({
     config,
@@ -171,41 +198,23 @@ module.exports = ({
                 redirect: ctxRedirect(globObj)
             };
             const tasks = [];
-            if (hooks.beforeSend) {
-                tasks.push(
-                    async params =>
-                        await formatResultSend(
-                            await hooks.beforeSend.call(
-                                context,
-                                params
-                            )
-                        )
-                );
-            }
-            tasks.push(
-                async params =>
-                    globObj.redirect
-                        ? params
-                        : await formatResultSend(
-                            await send.call(
-                                context,
-                                params
-                            )
-                        )
-            );
-            if (hooks.afterSend) {
-                tasks.push(
-                    async params =>
-                        globObj.redirect
-                            ? params
-                            : await formatResultSend(
-                                await hooks.afterSend.call(
-                                    context,
-                                    params
-                                )
-                            )
-                );
-            }
+            hooks.beforeSend && tasks.push(taskPush(
+                context,
+                formatResultSend,
+                hooks.beforeSend
+            ));
+            tasks.push(taskPushRedirect(
+                globObj.redirect,
+                context,
+                formatResultSend,
+                send
+            ));
+            hooks.afterSend && tasks.push(taskPushRedirect(
+                globObj.redirect,
+                context,
+                formatResultSend,
+                hooks.afterSend
+            ));
             try {
                 for (const task of tasks) {
                     data = await task(data);
@@ -277,53 +286,30 @@ module.exports = ({
                 globObj.system = cloneDeep(params.system);
                 return params;
             });
-            if (data.system.resume && hooks.resume) {
-                tasks.push(
-                    async params =>
-                        globObj.redirect
-                            ? params
-                            : formatResultReceive(
-                                await hooks.resume.call(context, params)
-                            )
-                );
-            }
-            if (hooks.beforeReceive) {
-                tasks.push(
-                    async params =>
-                        globObj.redirect
-                            ? params
-                            : formatResultReceive(
-                                await hooks.beforeReceive.call(
-                                    context,
-                                    params
-                                )
-                            )
-                );
-            }
-            tasks.push(
-                async params =>
-                    globObj.redirect
-                        ? params
-                        : formatResultReceive(
-                            await receive.call(
-                                context,
-                                params
-                            )
-                        )
-            );
-            if (hooks.afterReceive) {
-                tasks.push(
-                    async params =>
-                        globObj.redirect
-                            ? params
-                            : formatResultReceive(
-                                await hooks.afterReceive.call(
-                                    context,
-                                    params
-                                )
-                            )
-                );
-            }
+            data.system.resume && hooks.resume && tasks.push(taskPushRedirect(
+                globObj.redirect,
+                context,
+                formatResultReceive,
+                hooks.resume
+            ));
+            hooks.beforeReceive && tasks.push(taskPushRedirect(
+                globObj.redirect,
+                context,
+                formatResultReceive,
+                hooks.beforeReceive
+            ));
+            tasks.push(taskPushRedirect(
+                globObj.redirect,
+                context,
+                formatResultReceive,
+                receive
+            ));
+            hooks.afterReceive && tasks.push(taskPushRedirect(
+                globObj.redirect,
+                context,
+                formatResultReceive,
+                hooks.afterReceive
+            ));
             tasks.push(function(params) {
                 delete params.system.input;
                 if (params.system.resume) {
