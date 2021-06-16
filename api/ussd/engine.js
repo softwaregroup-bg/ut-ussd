@@ -403,10 +403,7 @@ module.exports = ({
                                 shortMessage: shortMessage.join(''),
                                 sourceAddr: data.system.phone
                             }),
-                            ...(
-                                (!exposeState && {}) ||
-                                {state: data}
-                            )
+                            ...(exposeState && {state: data})
                         });
                     };
                     parser.onerror = reject;
