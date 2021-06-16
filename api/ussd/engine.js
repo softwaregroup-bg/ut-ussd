@@ -65,16 +65,16 @@ const loadController = async({
     }
 };
 
-const ctxRedirect = (globObj) => (state) => {
-    globObj.system.routes = {
+const ctxRedirect = (localState) => (state) => {
+    localState.system.routes = {
         redirect: (
             typeof state === 'string'
                 ? state
                 : state.href
         )
     };
-    globObj.system.ussdMessage = 'redirect';
-    globObj.redirect = true;
+    localState.system.ussdMessage = 'redirect';
+    localState.redirect = true;
     return true;
 };
 
@@ -166,7 +166,7 @@ module.exports = ({
                 imp
             });
             // logic
-            const globObj = {
+            const localState = {
                 system: cloneDeep(data.system),
                 redirect: false
             };
@@ -175,8 +175,8 @@ module.exports = ({
                 if (!data) {
                     data = {};
                 }
-                if (globObj.redirect) {
-                    data.system = globObj.system;
+                if (localState.redirect) {
+                    data.system = localState.system;
                     return await engine.send(
                         await engine.route(data)
                     );
@@ -186,7 +186,7 @@ module.exports = ({
                 } else if (typeof result === 'object') {
                     formattedResult = result;
                 }
-                formattedResult.system = globObj.system;
+                formattedResult.system = localState.system;
                 return formattedResult;
             }
 
@@ -195,7 +195,7 @@ module.exports = ({
                 vfs,
                 import: imp,
                 utMethod,
-                redirect: ctxRedirect(globObj)
+                redirect: ctxRedirect(localState)
             };
             const tasks = [];
             hooks.beforeSend && tasks.push(taskPush(
@@ -204,13 +204,13 @@ module.exports = ({
                 hooks.beforeSend
             ));
             tasks.push(taskPushRedirect(
-                globObj.redirect,
+                localState.redirect,
                 context,
                 formatResultSend,
                 send
             ));
             hooks.afterSend && tasks.push(taskPushRedirect(
-                globObj.redirect,
+                localState.redirect,
                 context,
                 formatResultSend,
                 hooks.afterSend
@@ -223,7 +223,7 @@ module.exports = ({
                 const err = new Error((
                     (error.ussdMessage || '') +
                     ' | js error thrown by controller at state ' +
-                    globObj.system.state
+                    localState.system.state
                 ));
                 // @ts-ignore
                 err.cause = error;
@@ -241,7 +241,7 @@ module.exports = ({
                 direction: 'receive'
             }));
             // logic
-            let globObj = {
+            let localState = {
                 system: undefined,
                 redirect: false
             };
@@ -250,8 +250,8 @@ module.exports = ({
                 if (!data) {
                     data = {};
                 }
-                if (globObj.redirect) {
-                    data.system = globObj.system;
+                if (localState.redirect) {
+                    data.system = localState.system;
                     return data;
                 }
                 if (result === true) {
@@ -259,7 +259,7 @@ module.exports = ({
                 } else if (typeof result === 'object') {
                     formattedResult = result;
                 }
-                formattedResult.system = globObj.system;
+                formattedResult.system = localState.system;
                 return formattedResult;
             }
             const tasks = [];
@@ -268,7 +268,7 @@ module.exports = ({
                 vfs,
                 import: imp,
                 utMethod,
-                redirect: ctxRedirect(globObj)
+                redirect: ctxRedirect(localState)
             };
             tasks.push(function(params) {
                 const href = params.system.routes[data.system.ussdMessage] ||
@@ -283,29 +283,29 @@ module.exports = ({
                         requestParams: parsedUrl.searchParams
                     };
                 }
-                globObj.system = cloneDeep(params.system);
+                localState.system = cloneDeep(params.system);
                 return params;
             });
             data.system.resume && hooks.resume && tasks.push(taskPushRedirect(
-                globObj.redirect,
+                localState.redirect,
                 context,
                 formatResultReceive,
                 hooks.resume
             ));
             hooks.beforeReceive && tasks.push(taskPushRedirect(
-                globObj.redirect,
+                localState.redirect,
                 context,
                 formatResultReceive,
                 hooks.beforeReceive
             ));
             tasks.push(taskPushRedirect(
-                globObj.redirect,
+                localState.redirect,
                 context,
                 formatResultReceive,
                 receive
             ));
             hooks.afterReceive && tasks.push(taskPushRedirect(
-                globObj.redirect,
+                localState.redirect,
                 context,
                 formatResultReceive,
                 hooks.afterReceive
@@ -325,7 +325,7 @@ module.exports = ({
                 const err = new Error((
                     (error.ussdMessage || '') +
                     ' | js error thrown by controller at state ' +
-                    (globObj.system && globObj.system.state)
+                    (localState.system && localState.system.state)
                 ));
                 // @ts-ignore
                 err.cause = error;

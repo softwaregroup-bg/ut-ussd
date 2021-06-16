@@ -79,31 +79,26 @@ module.exports = ({
                             });
                         }
                     } else if (new Date(session.system.expire) < new Date()) { // session expired
-                        await sessions.setByPath(
+                        await sessions.merge(
                             phone,
-                            ['system', 'resume'],
-                            true
+                            {system: {resume: true}}
                         );
-                        await sessions.setByPath(
+                        await sessions.merge(
                             phone,
-                            ['system', 'expire'],
-                            getExpirationTime()
+                            {system: {expire: getExpirationTime()}}
                         );
-                        await sessions.setByPath(
+                        await sessions.merge(
                             phone,
-                            ['system', 'newSession'],
-                            undefined
+                            {system: {newSession: undefined}}
                         );
                     } else if (expireRule === 'refresh') {
-                        await sessions.setByPath(
+                        await sessions.merge(
                             phone,
-                            ['system', 'expire'],
-                            getExpirationTime()
+                            {system: {expire: getExpirationTime()}}
                         );
-                        await sessions.setByPath(
+                        await sessions.merge(
                             phone,
-                            ['system', 'newSession'],
-                            undefined
+                            {system: {newSession: undefined}}
                         );
                     }
                     session = await sessions.get(phone);
@@ -153,30 +148,36 @@ module.exports = ({
                         Array.isArray(strings) &&
                         ~strings.indexOf(ussdMessage)
                     ) { // ussd string
-                        await sessions.setByPath(
+                        await sessions.merge(
                             phone,
-                            ['system', 'ussdString'],
-                            ussdMessage.split(/[*#]/).slice(1, -1)
+                            {
+                                system: {
+                                    ussdString: ussdMessage
+                                        .split(/[*#]/)
+                                        .slice(1, -1)
+                                }
+                            }
                         );
-                        await sessions.setByPath(
+                        await sessions.merge(
                             phone,
-                            ['system', 'ussdMessage'],
-                            `*${session.system.ussdString.shift()}#`
+                            {
+                                system: {
+                                    ussdMessage: `*${session.system.ussdString.shift()}#`
+                                }
+                            }
                         );
                     } else {
-                        await sessions.setByPath(
+                        await sessions.merge(
                             phone,
-                            ['system', 'ussdMessage'],
-                            ussdMessage
+                            {system: {ussdMessage: ussdMessage}}
                         );
                     }
                     session = await sessions.get(phone);
                     if (session.system) {
                         // @ts-ignore
-                        await sessions.setByPath(
+                        await sessions.merge(
                             phone,
-                            ['system', 'config'],
-                            config
+                            {system: {config}}
                         );
                     }
                     const data = await engine.send(
