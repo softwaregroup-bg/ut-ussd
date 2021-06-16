@@ -1,6 +1,8 @@
 // @ts-check
 /** @type { import("../../handlers").libFactory } */
 
+const merge = require('ut-function.merge');
+
 module.exports = () => {
     class Cache {
         constructor() {
@@ -33,6 +35,12 @@ module.exports = () => {
                 }
                 await cacheSession.set(key, value);
                 return value;
+            },
+            merge: async(key, value) => {
+                const s = await cacheSession.get(key);
+                const sn = merge(s, value);
+                await cacheSession.set(key, sn);
+                return cacheSession.get(key);
             }
         }
     };

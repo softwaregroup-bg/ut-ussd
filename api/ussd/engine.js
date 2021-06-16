@@ -65,6 +65,46 @@ const loadController = async({
     }
 };
 
+const ctxRedirect = (localState) => (state) => {
+    localState.system.routes = {
+        redirect: (
+            typeof state === 'string'
+                ? state
+                : state.href
+        )
+    };
+    localState.system.ussdMessage = 'redirect';
+    localState.redirect = true;
+    return true;
+};
+
+const taskPush = (
+    context,
+    fr,
+    fn
+) => async params =>
+    await fr(
+        await fn.call(
+            context,
+            params
+        )
+    );
+
+const taskPushRedirect = (
+    redirect,
+    context,
+    formatResult,
+    fn
+) => async params =>
+    redirect
+        ? params
+        : await formatResult(
+            await fn.call(
+                context,
+                params
+            )
+        );
+
 /** @type { import("../../handlers").libFactory } */
 module.exports = ({
     config,
@@ -112,12 +152,11 @@ module.exports = ({
                 newState = wrongInputState ||
                 'menu/error/wrongInput';
             }
-            newState = normalizeState(state, newState);
             data.system.prevState = state;
-            data.system.state = newState;
-            backtrackFn(data);
-            parseRequestParams(data);
-            return data;
+            data.system.state = normalizeState(state, newState);
+            return parseRequestParams(
+                backtrackFn(data)
+            );
         },
         async send(data) {
             // initialization
@@ -127,14 +166,17 @@ module.exports = ({
                 imp
             });
             // logic
-            const system = cloneDeep(data.system);
+            const localState = {
+                system: cloneDeep(data.system),
+                redirect: false
+            };
             async function formatResultSend(result) {
                 let formattedResult = {};
                 if (!data) {
                     data = {};
                 }
-                if (redirect) {
-                    data.system = system;
+                if (localState.redirect) {
+                    data.system = localState.system;
                     return await engine.send(
                         await engine.route(data)
                     );
@@ -144,64 +186,35 @@ module.exports = ({
                 } else if (typeof result === 'object') {
                     formattedResult = result;
                 }
-                formattedResult.system = system;
+                formattedResult.system = localState.system;
                 return formattedResult;
             }
-            const tasks = [];
-            let redirect = false;
+
             const context = {
                 config,
                 vfs,
                 import: imp,
                 utMethod,
-                redirect: function(state) {
-                    system.routes = {
-                        redirect: (
-                            typeof state === 'string'
-                                ? state
-                                : state.href
-                        )
-                    };
-                    system.ussdMessage = 'redirect';
-                    redirect = true;
-                    return redirect;
-                }
+                redirect: ctxRedirect(localState)
             };
-            if (hooks.beforeSend) {
-                tasks.push(
-                    async params =>
-                        await formatResultSend(
-                            await hooks.beforeSend.call(
-                                context,
-                                params
-                            )
-                        )
-                );
-            }
-            tasks.push(
-                async params =>
-                    redirect
-                        ? params
-                        : await formatResultSend(
-                            await send.call(
-                                context,
-                                params
-                            )
-                        )
-            );
-            if (hooks.afterSend) {
-                tasks.push(
-                    async params =>
-                        redirect
-                            ? params
-                            : await formatResultSend(
-                                await hooks.afterSend.call(
-                                    context,
-                                    params
-                                )
-                            )
-                );
-            }
+            const tasks = [];
+            hooks.beforeSend && tasks.push(taskPush(
+                context,
+                formatResultSend,
+                hooks.beforeSend
+            ));
+            tasks.push(taskPushRedirect(
+                localState.redirect,
+                context,
+                formatResultSend,
+                send
+            ));
+            hooks.afterSend && tasks.push(taskPushRedirect(
+                localState.redirect,
+                context,
+                formatResultSend,
+                hooks.afterSend
+            ));
             try {
                 for (const task of tasks) {
                     data = await task(data);
@@ -210,7 +223,7 @@ module.exports = ({
                 const err = new Error((
                     (error.ussdMessage || '') +
                     ' | js error thrown by controller at state ' +
-                    system.state
+                    localState.system.state
                 ));
                 // @ts-ignore
                 err.cause = error;
@@ -228,14 +241,17 @@ module.exports = ({
                 direction: 'receive'
             }));
             // logic
-            let system;
+            let localState = {
+                system: undefined,
+                redirect: false
+            };
             function formatResultReceive(result) {
                 let formattedResult = {};
                 if (!data) {
                     data = {};
                 }
-                if (redirect) {
-                    data.system = system;
+                if (localState.redirect) {
+                    data.system = localState.system;
                     return data;
                 }
                 if (result === true) {
@@ -243,28 +259,16 @@ module.exports = ({
                 } else if (typeof result === 'object') {
                     formattedResult = result;
                 }
-                formattedResult.system = system;
+                formattedResult.system = localState.system;
                 return formattedResult;
             }
             const tasks = [];
-            let redirect = false;
             const context = {
                 config,
                 vfs,
                 import: imp,
                 utMethod,
-                redirect: function(state) {
-                    system.routes = {
-                        redirect: (
-                            typeof state === 'string'
-                                ? state
-                                : state.href
-                        )
-                    };
-                    system.ussdMessage = 'redirect';
-                    redirect = true;
-                    return redirect;
-                }
+                redirect: ctxRedirect(localState)
             };
             tasks.push(function(params) {
                 const href = params.system.routes[data.system.ussdMessage] ||
@@ -279,56 +283,33 @@ module.exports = ({
                         requestParams: parsedUrl.searchParams
                     };
                 }
-                system = cloneDeep(params.system);
+                localState.system = cloneDeep(params.system);
                 return params;
             });
-            if (data.system.resume && hooks.resume) {
-                tasks.push(
-                    async params =>
-                        redirect
-                            ? params
-                            : formatResultReceive(
-                                await hooks.resume.call(context, params)
-                            )
-                );
-            }
-            if (hooks.beforeReceive) {
-                tasks.push(
-                    async params =>
-                        redirect
-                            ? params
-                            : formatResultReceive(
-                                await hooks.beforeReceive.call(
-                                    context,
-                                    params
-                                )
-                            )
-                );
-            }
-            tasks.push(
-                async params =>
-                    redirect
-                        ? params
-                        : formatResultReceive(
-                            await receive.call(
-                                context,
-                                params
-                            )
-                        )
-            );
-            if (hooks.afterReceive) {
-                tasks.push(
-                    async params =>
-                        redirect
-                            ? params
-                            : formatResultReceive(
-                                await hooks.afterReceive.call(
-                                    context,
-                                    params
-                                )
-                            )
-                );
-            }
+            data.system.resume && hooks.resume && tasks.push(taskPushRedirect(
+                localState.redirect,
+                context,
+                formatResultReceive,
+                hooks.resume
+            ));
+            hooks.beforeReceive && tasks.push(taskPushRedirect(
+                localState.redirect,
+                context,
+                formatResultReceive,
+                hooks.beforeReceive
+            ));
+            tasks.push(taskPushRedirect(
+                localState.redirect,
+                context,
+                formatResultReceive,
+                receive
+            ));
+            hooks.afterReceive && tasks.push(taskPushRedirect(
+                localState.redirect,
+                context,
+                formatResultReceive,
+                hooks.afterReceive
+            ));
             tasks.push(function(params) {
                 delete params.system.input;
                 if (params.system.resume) {
@@ -344,7 +325,7 @@ module.exports = ({
                 const err = new Error((
                     (error.ussdMessage || '') +
                     ' | js error thrown by controller at state ' +
-                    (system && system.state)
+                    (localState.system && localState.system.state)
                 ));
                 // @ts-ignore
                 err.cause = error;

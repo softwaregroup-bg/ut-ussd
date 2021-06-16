@@ -12,6 +12,7 @@ module.exports = {
         } else if (idx !== len) {
             data.system.backtrack.splice(idx + 1, len - idx);
         }
+        return data;
     },
     parseRequestParams: function(data) {
         const parsedUrl = new URL(
@@ -20,6 +21,7 @@ module.exports = {
         );
         data.system.state = parsedUrl.pathname;
         data.system.requestParams = parsedUrl.searchParams;
+        return data;
     },
     escapeXml: function(str) {
         return str.replace(excapeXmlRegExp, function(str, x) {
