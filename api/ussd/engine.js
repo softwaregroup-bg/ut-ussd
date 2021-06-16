@@ -13,14 +13,13 @@ const {
 const buildResponse = ({
     defaultShortCode,
     defaultPhone
-}) => function(data) {
+}) => function({state, ...data}) {
     const x = merge({
         errorCode: 0,
         errorMessage: '',
         shortMessage: 'no ussdMessage provided'
     }, data);
-
-    return {
+    const result = {
         ...(x.errorCode !== 0) && {
             error: {
                 code: x.errorCode,
@@ -32,6 +31,8 @@ const buildResponse = ({
         defaultCode: defaultShortCode,
         phoneNumber: defaultPhone
     };
+    state && (result.state = state);
+    return result;
 };
 
 const loadController = async({
@@ -117,6 +118,7 @@ module.exports = ({
         defaultShortCode,
         defaultPhone,
         shortCodes,
+        exposeState,
         wrongInputState
     } = config;
     let hooks;
@@ -398,7 +400,8 @@ module.exports = ({
                     parser.onend = () => {
                         resolve({
                             shortMessage: shortMessage.join(''),
-                            sourceAddr: data.system.phone
+                            sourceAddr: data.system.phone,
+                            ...(exposeState && {state: data})
                         });
                     };
                     parser.onerror = reject;
