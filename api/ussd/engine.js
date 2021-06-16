@@ -19,7 +19,7 @@ const buildResponse = ({
         errorMessage: '',
         shortMessage: 'no ussdMessage provided'
     }, data);
-    const result =  {
+    const result = {
         ...(x.errorCode !== 0) && {
             error: {
                 code: x.errorCode,
@@ -404,7 +404,7 @@ module.exports = ({
                                 sourceAddr: data.system.phone
                             }),
                             ...(
-                                !exposeState && {} ||
+                                (!exposeState && {}) ||
                                 {state: data}
                             )
                         });
