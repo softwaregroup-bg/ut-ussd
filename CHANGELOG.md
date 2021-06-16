@@ -1,3 +1,12 @@
+## [7.1.14](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.13...v7.1.14) (2021-06-16)
+
+
+### Bug Fixes
+
+* side effects ([#15](https://github.com/softwaregroup-bg/ut-ussd/issues/15)) ([b0c9dfd](https://github.com/softwaregroup-bg/ut-ussd/commit/b0c9dfd8f0b7aa44ec656b71eb92e0d662259a8b))
+
+
+
 ## [7.1.13](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.12...v7.1.13) (2021-06-11)
 
 
