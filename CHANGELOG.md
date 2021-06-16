@@ -1,3 +1,12 @@
+## [7.1.15](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.14...v7.1.15) (2021-06-16)
+
+
+### Bug Fixes
+
+* return internal state UTCORE-128 ([#16](https://github.com/softwaregroup-bg/ut-ussd/issues/16)) ([df4fc19](https://github.com/softwaregroup-bg/ut-ussd/commit/df4fc19dcfb5ca4d98018e48a48ab0a4ef2af532))
+
+
+
 ## [7.1.14](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.13...v7.1.14) (2021-06-16)
 
 
