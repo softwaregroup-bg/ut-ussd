@@ -13,7 +13,7 @@ const {
 const buildResponse = ({
     defaultShortCode,
     defaultPhone
-}) => function({internalState, ...data}) {
+}) => function({exposeState, ...data}) {
     const x = merge({
         errorCode: 0,
         errorMessage: '',
@@ -31,7 +31,7 @@ const buildResponse = ({
         defaultCode: defaultShortCode,
         phoneNumber: defaultPhone
     };
-    internalState && (result.internalState = internalState);
+    exposeState && (result.exposeState = exposeState);
     return result;
 };
 
@@ -405,7 +405,7 @@ module.exports = ({
                             }),
                             ...(
                                 !exposeState && {} ||
-                                {internalState: data}
+                                {exposeState: data}
                             )
                         });
                     };
