@@ -13,7 +13,7 @@ module.exports = () => ({
     // environments
     common: {
         ussd: {
-            exposeInternalState: false, // this will expose runtime state to result
+            exposeState: false, // this will expose runtime state to result
             translations: {},
             shortCodes: {},
             defaultShortCode: '*123#',
@@ -96,7 +96,7 @@ module.exports = () => ({
             defaultShortCode: joi.string(),
             defaultPhone: joi.string(),
             identity: joi.boolean(),
-            exposeInternalState: joi.boolean(),
+            exposeState: joi.boolean(),
             expireRule: joi.string(),
             timeOut: joi.number(),
             maintenanceModeState: joi.string(),

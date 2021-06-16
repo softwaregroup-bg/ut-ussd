@@ -118,7 +118,7 @@ module.exports = ({
         defaultShortCode,
         defaultPhone,
         shortCodes,
-        exposeInternalState,
+        exposeState,
         wrongInputState
     } = config;
     let hooks;
@@ -404,7 +404,7 @@ module.exports = ({
                                 sourceAddr: data.system.phone
                             }),
                             ...(
-                                !exposeInternalState && {} ||
+                                !exposeState && {} ||
                                 {internalState: data}
                             )
                         });
