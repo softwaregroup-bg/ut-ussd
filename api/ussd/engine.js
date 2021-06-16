@@ -399,10 +399,8 @@ module.exports = ({
                 return await new Promise((resolve, reject) => {
                     parser.onend = () => {
                         resolve({
-                            ...({
-                                shortMessage: shortMessage.join(''),
-                                sourceAddr: data.system.phone
-                            }),
+                            shortMessage: shortMessage.join(''),
+                            sourceAddr: data.system.phone,
                             ...(exposeState && {state: data})
                         });
                     };
