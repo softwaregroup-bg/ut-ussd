@@ -12,8 +12,8 @@ class Cache {
         if (this.remoteCall) {
             return this.remoteCall('ussd.session.update')(undefined, {
                 cache: {
-                    operation:'get',
-                    key:{id: key}
+                    operation: 'get',
+                    key: {id: key}
                 }
             });
         }
@@ -24,9 +24,9 @@ class Cache {
         if (this.remoteCall) {
             return this.remoteCall('ussd.session.update')(value, {
                 cache: {
-                    operation:'set',
+                    operation: 'set',
                     ttl: 999999,
-                    key:{id: key}
+                    key: {id: key}
                 }
             });
         }
@@ -37,8 +37,8 @@ class Cache {
         if (this.remoteCall) {
             return this.remoteCall('ussd.session.update')(undefined, {
                 cache: {
-                    operation:'drop',
-                    key:{id: key}
+                    operation: 'drop',
+                    key: {id: key}
                 }
             });
         }

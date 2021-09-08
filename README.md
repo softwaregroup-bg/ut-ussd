@@ -6,7 +6,8 @@
 {
   utUssd: {
     ussd: {
-      exposeState: 'true|false', // this will expose runtime state if set to true, defaults: false
+      exposeState: 'true|false', // this will expose runtime
+      // state if set to true, defaults: false
       // refresh: gets refreshed on every cycle;
       // static(default): sets only once and will expire
       // in predefined period of time (timeOut);
