@@ -1,3 +1,12 @@
+# [7.2.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.15...v7.2.0) (2021-09-08)
+
+
+### Features
+
+* remote session call UTCORE-173 ([#17](https://github.com/softwaregroup-bg/ut-ussd/issues/17)) ([5c69484](https://github.com/softwaregroup-bg/ut-ussd/commit/5c694847790de8b13704f3c4cd7121d53ae669b2))
+
+
+
 ## [7.1.15](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.14...v7.1.15) (2021-06-16)
 
 

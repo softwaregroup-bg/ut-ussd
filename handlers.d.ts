@@ -44,21 +44,21 @@ declare namespace ussd.session.removeRest {
 }
 
 import ut from 'ut-run';
-export interface handlers {
-  'ussd.config.get': ut.remoteHandler<ussd.config.get.params, ussd.config.get.result>,
-  ussdConfigGet: ut.remoteHandler<ussd.config.get.params, ussd.config.get.result>,
-  'ussd.config.getRest': ut.remoteHandler<ussd.config.getRest.params, ussd.config.getRest.result>,
-  ussdConfigGetRest: ut.remoteHandler<ussd.config.getRest.params, ussd.config.getRest.result>,
-  'ussd.message.process': ut.remoteHandler<ussd.message.process.params, ussd.message.process.result>,
-  ussdMessageProcess: ut.remoteHandler<ussd.message.process.params, ussd.message.process.result>,
-  'ussd.message.processRest': ut.remoteHandler<ussd.message.processRest.params, ussd.message.processRest.result>,
-  ussdMessageProcessRest: ut.remoteHandler<ussd.message.processRest.params, ussd.message.processRest.result>,
-  'ussd.session.fetchRest': ut.remoteHandler<ussd.session.fetchRest.params, ussd.session.fetchRest.result>,
-  ussdSessionFetchRest: ut.remoteHandler<ussd.session.fetchRest.params, ussd.session.fetchRest.result>,
-  'ussd.session.getRest': ut.remoteHandler<ussd.session.getRest.params, ussd.session.getRest.result>,
-  ussdSessionGetRest: ut.remoteHandler<ussd.session.getRest.params, ussd.session.getRest.result>,
-  'ussd.session.removeRest': ut.remoteHandler<ussd.session.removeRest.params, ussd.session.removeRest.result>,
-  ussdSessionRemoveRest: ut.remoteHandler<ussd.session.removeRest.params, ussd.session.removeRest.result>
+export interface handlers<location = ''> {
+  'ussd.config.get'?: ut.handler<ussd.config.get.params, ussd.config.get.result, location>,
+  ussdConfigGet?: ut.handler<ussd.config.get.params, ussd.config.get.result, location>,
+  'ussd.config.getRest'?: ut.handler<ussd.config.getRest.params, ussd.config.getRest.result, location>,
+  ussdConfigGetRest?: ut.handler<ussd.config.getRest.params, ussd.config.getRest.result, location>,
+  'ussd.message.process'?: ut.handler<ussd.message.process.params, ussd.message.process.result, location>,
+  ussdMessageProcess?: ut.handler<ussd.message.process.params, ussd.message.process.result, location>,
+  'ussd.message.processRest'?: ut.handler<ussd.message.processRest.params, ussd.message.processRest.result, location>,
+  ussdMessageProcessRest?: ut.handler<ussd.message.processRest.params, ussd.message.processRest.result, location>,
+  'ussd.session.fetchRest'?: ut.handler<ussd.session.fetchRest.params, ussd.session.fetchRest.result, location>,
+  ussdSessionFetchRest?: ut.handler<ussd.session.fetchRest.params, ussd.session.fetchRest.result, location>,
+  'ussd.session.getRest'?: ut.handler<ussd.session.getRest.params, ussd.session.getRest.result, location>,
+  ussdSessionGetRest?: ut.handler<ussd.session.getRest.params, ussd.session.getRest.result, location>,
+  'ussd.session.removeRest'?: ut.handler<ussd.session.removeRest.params, ussd.session.removeRest.result, location>,
+  ussdSessionRemoveRest?: ut.handler<ussd.session.removeRest.params, ussd.session.removeRest.result, location>
 }
 
 export interface errors {
@@ -67,5 +67,9 @@ export interface errors {
 
 
 export type libFactory = ut.libFactory<methods, errors>
-export type handlerFactory = ut.handlerFactory<methods, errors>
-export type handlerSet = ut.handlerSet<methods, errors>
+export type handlerFactory = ut.handlerFactory<methods, errors, handlers<'local'>>
+export type handlerSet = ut.handlerSet<methods, errors, handlers<'local'>>
+
+import portal from 'ut-portal'
+export type pageFactory = portal.pageFactory<methods, errors>
+export type pageSet = portal.pageSet<methods, errors>
