@@ -25,7 +25,10 @@ module.exports = {
     },
     db: true,
     utCache: {
-        adapter: true
+        adapter: true,
+        cache: {
+            namespace: ['cache', 'cache/ussd']
+        }
     },
     utCore: true,
     utCustomer: true,

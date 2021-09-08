@@ -1,5 +1,5 @@
 module.exports = [
-    // 'ut-cache',
+    'ut-cache',
     // 'ut-db',
     // 'ut-core',
     // 'ut-document',

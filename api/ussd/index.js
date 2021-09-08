@@ -2,7 +2,7 @@
 /** @type { import("../../handlers").handlerSet } */
 module.exports = function ussd() {
     return [
-        require('./sessions'),
+        require('./session'),
         require('./engine'),
         require('./request'),
         require('./ussd.config.get'),
