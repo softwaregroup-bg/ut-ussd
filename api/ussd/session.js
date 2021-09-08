@@ -11,7 +11,7 @@ class Cache {
     get(key) {
         if (this.remoteCall) {
             return this.remoteCall('ussd.session.update')(undefined, {
-                cache:{
+                cache: {
                     operation:'get',
                     key:{id: key}
                 }
@@ -23,7 +23,7 @@ class Cache {
     set(key, value) {
         if (this.remoteCall) {
             return this.remoteCall('ussd.session.update')(value, {
-                cache:{
+                cache: {
                     operation:'set',
                     ttl: 999999,
                     key:{id: key}
@@ -36,7 +36,7 @@ class Cache {
     del(key) {
         if (this.remoteCall) {
             return this.remoteCall('ussd.session.update')(undefined, {
-                cache:{
+                cache: {
                     operation:'drop',
                     key:{id: key}
                 }
@@ -49,7 +49,7 @@ class Cache {
 module.exports = ({
     config: {
         session : {remote} = {}
-    } = {}, 
+    } = {},
     utMethod
 }) => {
     const cacheSession = new Cache(
