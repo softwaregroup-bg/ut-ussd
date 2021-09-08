@@ -3,26 +3,45 @@
 
 const merge = require('ut-function.merge');
 
-module.exports = () => {
-    class Cache {
-        constructor() {
-            this.storage = {};
-        }
-
-        get(key) {
-            return this.storage[key];
-        }
-
-        set(key, value) {
-            this.storage[key] = value;
-        }
-
-        del(key) {
-            delete this.storage[key];
-        }
+class Cache {
+    constructor(utMethod) {
+        this.storage = {};
+        this.remoteCall = utMethod;
     }
 
-    const cacheSession = new Cache();
+    get(key) {
+        if (this.remoteCall) {
+            return this.remoteCall('session.get')({key});
+        }
+        return this.storage[key];
+    }
+
+    set(key, value) {
+        if (this.remoteCall) {
+            return this.remoteCall('session.set')({key, value});
+        }
+        this.storage[key] = value;
+    }
+
+    del(key) {
+        if (this.remoteCall) {
+            return this.remoteCall('session.delete')({key});
+        }
+        delete this.storage[key];
+    }
+}
+
+module.exports = ({
+    config: {
+        session : {remote} = {}
+    } = {}, 
+    utMethod
+}) => {
+    const cacheSession = new Cache(
+        remote &&
+            (suffix) =>
+                utMethod([remote, suffix].join('.'))
+    );
 
     return {
         sessions: {

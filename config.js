@@ -106,6 +106,12 @@ module.exports = () => ({
                 joi.string()
             ),
             charsCount: joi.boolean(),
+            session: joi.object({
+                // remote is actually namespace eg.
+                // session-remote-cache will be translated to:
+                // utMethod('session-remote-cache.set,get,delete)
+                remote: joi.string()
+            }),
             slogan: joi.string(),
             routes: joi.object({
                 common: joi.object(),
