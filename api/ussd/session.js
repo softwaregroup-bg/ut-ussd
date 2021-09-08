@@ -2,79 +2,58 @@
 /** @type { import("../../handlers").libFactory } */
 
 const merge = require('ut-function.merge');
-class Cache {
-    constructor(utMethod) {
-        this.storage = {};
-        this.remoteCall = utMethod;
-    }
-
+const Cache = (utMethod) => ({
     get(key) {
-        if (this.remoteCall) {
-            return this.remoteCall('ussd.session.update')(undefined, {
-                cache: {
-                    operation: 'get',
-                    key: {id: key}
-                }
-            });
-        }
-        return this.storage[key];
-    }
-
+        return utMethod(undefined, {
+            cache: {
+                operation: 'get',
+                key: {id: key}
+            }
+        });
+    },
     set(key, value) {
-        if (this.remoteCall) {
-            return this.remoteCall('ussd.session.update')(value, {
-                cache: {
-                    operation: 'set',
-                    ttl: 999999,
-                    key: {id: key}
-                }
-            });
-        }
-        this.storage[key] = value;
-    }
-
+        return utMethod(value, {
+            cache: {
+                operation: 'set',
+                ttl: 999999,
+                key: {id: key}
+            }
+        });
+    },
     del(key) {
-        if (this.remoteCall) {
-            return this.remoteCall('ussd.session.update')(undefined, {
-                cache: {
-                    operation: 'drop',
-                    key: {id: key}
-                }
-            });
-        }
-        delete this.storage[key];
+        return utMethod(undefined, {
+            cache: {
+                operation: 'drop',
+                key: {id: key}
+            }
+        });
     }
-}
+});
 
 module.exports = ({
-    config: {
-        session: {remote} = {}
-    } = {},
-    utMethod
+    import: {
+        'cache/ussd.session.update': cache
+    }
 }) => {
-    const cacheSession = new Cache(
-        remote && (
-            (suffix) => utMethod([remote, suffix].join(''))
-        )
-    );
+    const cacheObj = Cache(cache);
 
     return {
         sessions: {
-            get: async key => cacheSession.get(key),
-            del: async key => cacheSession.del(key),
+            get: async key => cacheObj.get(key),
+            del: async key => cacheObj.del(key),
             set: async(key, value) => {
                 if (!value) {
                     value = key;
                     key = value.system.phone;
                 }
-                await cacheSession.set(key, value);
+                await cacheObj.set(key, value);
                 return value;
             },
             merge: async(key, value) => {
-                const s = await cacheSession.get(key);
+                const s = await cacheObj.get(key);
                 const sn = merge(s, value);
-                await cacheSession.set(key, sn);
-                return cacheSession.get(key);
+                await cacheObj.set(key, sn);
+                return cacheObj.get(key);
             }
         }
     };
