@@ -48,7 +48,7 @@ class Cache {
 
 module.exports = ({
     config: {
-        session : {remote} = {}
+        session: {remote} = {}
     } = {},
     utMethod
 }) => {
