@@ -2,7 +2,6 @@
 /** @type { import("../../handlers").libFactory } */
 
 const merge = require('ut-function.merge');
-
 class Cache {
     constructor(utMethod) {
         this.storage = {};
@@ -11,21 +10,37 @@ class Cache {
 
     get(key) {
         if (this.remoteCall) {
-            return this.remoteCall('session.get')({key});
+            return this.remoteCall('ussd.session.update')(undefined, {
+                cache:{
+                    operation:'get',
+                    key:{id: key}
+                }
+            });
         }
         return this.storage[key];
     }
 
     set(key, value) {
         if (this.remoteCall) {
-            return this.remoteCall('session.set')({key, value});
+            return this.remoteCall('ussd.session.update')(value, {
+                cache:{
+                    operation:'set',
+                    ttl: 999999,
+                    key:{id: key}
+                }
+            });
         }
         this.storage[key] = value;
     }
 
     del(key) {
         if (this.remoteCall) {
-            return this.remoteCall('session.delete')({key});
+            return this.remoteCall('ussd.session.update')(undefined, {
+                cache:{
+                    operation:'drop',
+                    key:{id: key}
+                }
+            });
         }
         delete this.storage[key];
     }
@@ -38,9 +53,9 @@ module.exports = ({
     utMethod
 }) => {
     const cacheSession = new Cache(
-        remote &&
-            (suffix) =>
-                utMethod([remote, suffix].join('.'))
+        remote && (
+            (suffix) => utMethod([remote, suffix].join(''))
+        )
     );
 
     return {
