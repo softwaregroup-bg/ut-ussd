@@ -1,64 +1,66 @@
-declare namespace ussd.config.get {
-  export interface params {
-  
-  }
-  export interface result {
-  
-  }
+declare namespace ussdTableTypes {}
+declare namespace ussd_config_get {
+  export interface params {}
+  export interface result {}
 }
 
-declare namespace ussd.config.getRest {
+declare namespace ussd_config_getRest {
   
   
 }
 
-declare namespace ussd.message.process {
+declare namespace ussd_message_process {
   export interface params {
+    newSession?: boolean;
     phone: string;
     ussdMessage: string;
-    newSession?: boolean;
   }
   export interface result {
     response?: string;
   }
 }
 
-declare namespace ussd.message.processRest {
+declare namespace ussd_message_processRest {
   
   
 }
 
-declare namespace ussd.session.fetchRest {
+declare namespace ussd_session_fetchRest {
   
   
 }
 
-declare namespace ussd.session.getRest {
+declare namespace ussd_session_getRest {
   
   
 }
 
-declare namespace ussd.session.removeRest {
+declare namespace ussd_session_removeRest {
   
   
 }
 
 import ut from 'ut-run';
+export interface ports<location = ''> {
+
+}
+interface methods extends ports {}
+
 export interface handlers<location = ''> {
-  'ussd.config.get'?: ut.handler<ussd.config.get.params, ussd.config.get.result, location>,
-  ussdConfigGet?: ut.handler<ussd.config.get.params, ussd.config.get.result, location>,
-  'ussd.config.getRest'?: ut.handler<ussd.config.getRest.params, ussd.config.getRest.result, location>,
-  ussdConfigGetRest?: ut.handler<ussd.config.getRest.params, ussd.config.getRest.result, location>,
-  'ussd.message.process'?: ut.handler<ussd.message.process.params, ussd.message.process.result, location>,
-  ussdMessageProcess?: ut.handler<ussd.message.process.params, ussd.message.process.result, location>,
-  'ussd.message.processRest'?: ut.handler<ussd.message.processRest.params, ussd.message.processRest.result, location>,
-  ussdMessageProcessRest?: ut.handler<ussd.message.processRest.params, ussd.message.processRest.result, location>,
-  'ussd.session.fetchRest'?: ut.handler<ussd.session.fetchRest.params, ussd.session.fetchRest.result, location>,
-  ussdSessionFetchRest?: ut.handler<ussd.session.fetchRest.params, ussd.session.fetchRest.result, location>,
-  'ussd.session.getRest'?: ut.handler<ussd.session.getRest.params, ussd.session.getRest.result, location>,
-  ussdSessionGetRest?: ut.handler<ussd.session.getRest.params, ussd.session.getRest.result, location>,
-  'ussd.session.removeRest'?: ut.handler<ussd.session.removeRest.params, ussd.session.removeRest.result, location>,
-  ussdSessionRemoveRest?: ut.handler<ussd.session.removeRest.params, ussd.session.removeRest.result, location>
+  'ussd.config.get'?: ut.handler<ussd_config_get.params, ussd_config_get.result, location>,
+  ussdConfigGet?: ut.handler<ussd_config_get.params, ussd_config_get.result, location>,
+  'ussd.config.getRest'?: ut.handler<ussd_config_getRest.params, ussd_config_getRest.result, location>,
+  ussdConfigGetRest?: ut.handler<ussd_config_getRest.params, ussd_config_getRest.result, location>,
+  'ussd.message.process'?: ut.handler<ussd_message_process.params, ussd_message_process.result, location>,
+  ussdMessageProcess?: ut.handler<ussd_message_process.params, ussd_message_process.result, location>,
+  'ussd.message.processRest'?: ut.handler<ussd_message_processRest.params, ussd_message_processRest.result, location>,
+  ussdMessageProcessRest?: ut.handler<ussd_message_processRest.params, ussd_message_processRest.result, location>,
+  'ussd.session.fetchRest'?: ut.handler<ussd_session_fetchRest.params, ussd_session_fetchRest.result, location>,
+  ussdSessionFetchRest?: ut.handler<ussd_session_fetchRest.params, ussd_session_fetchRest.result, location>,
+  'ussd.session.getRest'?: ut.handler<ussd_session_getRest.params, ussd_session_getRest.result, location>,
+  ussdSessionGetRest?: ut.handler<ussd_session_getRest.params, ussd_session_getRest.result, location>,
+  'ussd.session.removeRest'?: ut.handler<ussd_session_removeRest.params, ussd_session_removeRest.result, location>,
+  ussdSessionRemoveRest?: ut.handler<ussd_session_removeRest.params, ussd_session_removeRest.result, location>
 }
 
 export interface errors {

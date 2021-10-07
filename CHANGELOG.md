@@ -1,3 +1,12 @@
+## [7.2.1](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.2.0...v7.2.1) (2021-10-07)
+
+
+### Bug Fixes
+
+* forgotten config VFM-1416 ([1f2eaf0](https://github.com/softwaregroup-bg/ut-ussd/commit/1f2eaf054a172737c9baed416c4c559175c647e3))
+
+
+
 # [7.2.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.1.15...v7.2.0) (2021-09-08)
 
 
