@@ -57,6 +57,7 @@ module.exports = ({
                             });
                             await sessions.set(phone, {
                                 system: {
+                                    config,
                                     expire: getExpirationTime(),
                                     phone,
                                     backtrack: [],
@@ -70,6 +71,7 @@ module.exports = ({
                         } else {
                             await sessions.set(phone, {
                                 system: {
+                                    config,
                                     expire: getExpirationTime(),
                                     phone,
                                     backtrack: [],
