@@ -95,6 +95,7 @@ module.exports = () => ({
             shortCodes: joi.object(),
             defaultShortCode: joi.string(),
             defaultPhone: joi.string(),
+            defaultLanguage: joi.string(),
             identity: joi.boolean(),
             exposeState: joi.boolean(),
             expireRule: joi.string(),
