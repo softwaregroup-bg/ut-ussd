@@ -103,6 +103,7 @@ module.exports = () => ({
             maintenanceModeState: joi.string(),
             wrongInputState: joi.string(),
             resumeState: joi.string(),
+            customerSupportPhoneNumber: joi.string(),
             strings: joi.array().items(
                 joi.string()
             ),
