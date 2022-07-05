@@ -29,7 +29,7 @@ const buildResponse = ({
         },
         message: x.shortMessage,
         defaultCode: defaultShortCode,
-        phoneNumber: defaultPhone
+        phoneNumber: x.sourceAddr
     };
     state && (result.state = state);
     return result;
