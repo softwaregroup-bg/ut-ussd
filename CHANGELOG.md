@@ -1,3 +1,12 @@
+## [7.2.5](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.2.4...v7.2.5) (2022-07-13)
+
+
+### Bug Fixes
+
+* VFG-198-return source number in ussd response ([#21](https://github.com/softwaregroup-bg/ut-ussd/issues/21)) ([ba4fb2f](https://github.com/softwaregroup-bg/ut-ussd/commit/ba4fb2ff7560ee1c77c45b44083caf7367bbb89a))
+
+
+
 ## [7.2.4](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.2.3...v7.2.4) (2022-05-29)
 
 
