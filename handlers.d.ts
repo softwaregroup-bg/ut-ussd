@@ -5,8 +5,8 @@ declare namespace ussd_config_get {
 }
 
 declare namespace ussd_config_getRest {
-  
-  
+  export type params = unknown;
+  export type result = unknown;
 }
 
 declare namespace ussd_message_process {
@@ -21,23 +21,23 @@ declare namespace ussd_message_process {
 }
 
 declare namespace ussd_message_processRest {
-  
-  
+  export type params = unknown;
+  export type result = unknown;
 }
 
 declare namespace ussd_session_fetchRest {
-  
-  
+  export type params = unknown;
+  export type result = unknown;
 }
 
 declare namespace ussd_session_getRest {
-  
-  
+  export type params = unknown;
+  export type result = unknown;
 }
 
 declare namespace ussd_session_removeRest {
-  
-  
+  export type params = unknown;
+  export type result = unknown;
 }
 
 import ut from 'ut-run';
@@ -71,7 +71,9 @@ export interface errors {
 export type libFactory = ut.libFactory<methods, errors>
 export type handlerFactory = ut.handlerFactory<methods, errors, handlers<'local'>>
 export type handlerSet = ut.handlerSet<methods, errors, handlers<'local'>>
+export type test = ut.test<methods & handlers>
+export type steps = ut.steps<methods & handlers>
 
-import portal from 'ut-portal/handlers'
+import portal from 'ut-portal'
 export type pageFactory = portal.pageFactory<methods, errors>
 export type pageSet = portal.pageSet<methods, errors>
