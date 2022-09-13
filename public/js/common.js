@@ -101,18 +101,25 @@ function ussdRequest(button, destination, phoneInput, dataCollection) {
 function closeUSSDSession(code) {
     var _self = this;
     jQuery.ajax({
-        url: '/closeUSSDSession',
-        type: 'POST',
-        dataType: 'xml',
+        url: '/rpc/ussd/session',
+        type: 'DELETE',
+        dataType: 'json',
         data: {phone: jQuery('#phone-input input').val()}
     })
         .always(function() {
             $('#code-input input').focus();
         })
         .done(function(data) {
-            $('#phone_screen code').html(data.documentElement.children[1].textContent);
-            //    $('#code-input input').val('*131#');
-            $('#code-input input').val(data.documentElement.getElementsByTagName('DefaultCode')[0].textContent || '11');
+            var stat = data.error;
+            var msg = data.message;
+            if (stat && stat.message !== '') {
+                $('#phone_screen code').html(stat.message);
+            } else {
+                $('#phone_screen code').html(msg);
+            }
+            // $('#phone_screen code').html(data.documentElement.children[1].textContent);
+            // //    $('#code-input input').val('*131#');
+            // $('#code-input input').val(data.documentElement.getElementsByTagName('DefaultCode')[0].textContent || '11');
             phone.isInUSSD = false;
         })
         .fail(function(r, err, errDesc) {

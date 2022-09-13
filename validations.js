@@ -16,6 +16,7 @@ module.exports = function validation({joi}) {
             auth: false
         }),
         'ussd.session.removeRest': () => ({
+            // Used by the USSD Simulator (disable in prod)
             method: 'DELETE',
             path: '/session',
             auth: false
