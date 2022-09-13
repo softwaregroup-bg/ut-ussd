@@ -7,9 +7,9 @@ module.exports = ({
         engine
     }
 }) => {
-    async function remove() {
+    async function remove(params, $meta) {
         try {
-            await sessions.del(request.payload.phone);
+            await sessions.del(params.phone);
             return engine.buildResponse({shortMessage: 'Session Closed'});
         } catch (e) {
             return engine.buildResponse({shortMessage: 'error occurred when deleting the session data'});
