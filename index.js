@@ -12,7 +12,7 @@ module.exports = () => function utUssd() {
                 return class cache extends require('ut-port-cache')(...arguments) {
                     get defaults() {
                         return {
-                            namespace: ['cache/ussd'],
+                            namespace: ['cache/ussd']
                         };
                     }
                 };
