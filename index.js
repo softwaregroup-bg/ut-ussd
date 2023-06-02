@@ -8,6 +8,15 @@ module.exports = () => function utUssd() {
             require('./api/ussd')
         ],
         adapter: () => [
+            function cache() {
+                return class cache extends require('ut-port-cache')(...arguments) {
+                    get defaults() {
+                        return {
+                            namespace: ['cache/ussd'],
+                        };
+                    }
+                };
+            }
         ],
         gateway: () => [
             require('./validations'),
