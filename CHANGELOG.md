@@ -1,3 +1,12 @@
+# [7.3.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.2.6...v7.3.0) (2023-06-02)
+
+
+### Features
+
+* add cache/ussd in the adapter ([2c607cc](https://github.com/softwaregroup-bg/ut-ussd/commit/2c607cc783bcc6e53c9840ff568814f5cae779c2))
+
+
+
 ## [7.2.6](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.2.5...v7.2.6) (2022-09-13)
 
 
