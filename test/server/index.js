@@ -1,5 +1,6 @@
 module.exports = [
     'ut-cache',
+    'ut-telemetry',
     // 'ut-db',
     // 'ut-core',
     // 'ut-document',
