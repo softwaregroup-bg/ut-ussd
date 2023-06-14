@@ -1,3 +1,12 @@
+## [7.3.2](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.3.1...v7.3.2) (2023-06-14)
+
+
+### Bug Fixes
+
+* switch to react-jss ([28b3700](https://github.com/softwaregroup-bg/ut-ussd/commit/28b3700f779b3dd9b8f5d811e8f8aaab480cafe1))
+
+
+
 ## [7.3.1](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.3.0...v7.3.1) (2023-06-12)
 
 
