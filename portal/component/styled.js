@@ -1,9 +1,7 @@
-// @ts-check
-import { withStyles, createStyles } from '@material-ui/core/styles';
-// @ts-ignore
+import {createUseStyles} from 'react-jss';
 import phone from './phone.png';
 
-export default withStyles(createStyles({
+export default createUseStyles({
     resultForm: {
         display: 'block',
         overflow: 'hidden',
@@ -199,4 +197,4 @@ export default withStyles(createStyles({
     loading: {
         background: 'url(../img/loading.gif) no-repeat center center #FFF'
     }
-}));
+});

@@ -37,7 +37,8 @@ export default ({
                 defaultPhone,
                 defaultShortCode
             } = config;
-            return styled(function FooOpen({classes}) {
+            return function FooOpen() {
+                const classes = styled();
                 const [
                     inputMessage,
                     inputPhone,
@@ -102,7 +103,7 @@ export default ({
                         </form>
                     </div>
                 );
-            });
+            };
         }
     })
 });
