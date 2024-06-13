@@ -89,6 +89,7 @@ module.exports = () => ({
             joi.boolean(),
             joi.object()
         ],
+        cache: joi.object(),
         ussd: joi.object({
             baseDir: joi.string().required(),
             translations: joi.object(),
