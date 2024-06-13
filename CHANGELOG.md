@@ -1,3 +1,12 @@
+## [7.3.3](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.3.2...v7.3.3) (2024-06-13)
+
+
+### Bug Fixes
+
+* **APEXG-3871:** add cache in configuration validation ([cccea77](https://github.com/softwaregroup-bg/ut-ussd/commit/cccea7757e67f10004609fb9bdf494e599a450f2))
+
+
+
 ## [7.3.2](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.3.1...v7.3.2) (2023-06-14)
 
 
