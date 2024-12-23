@@ -8,6 +8,7 @@ module.exports = () => function utUssd() {
             require('./api/ussd')
         ],
         adapter: () => [
+            require('./api/sql/schema'),
             function cache() {
                 return class cache extends require('ut-port-cache')(...arguments) {
                     get defaults() {
