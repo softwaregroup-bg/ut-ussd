@@ -17,7 +17,7 @@ BEGIN
             traceNo,
             error
         )
-        SELECT 
+        SELECT
             ussdBody,
             msg,
             phoneNumber,
