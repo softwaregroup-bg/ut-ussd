@@ -1,3 +1,17 @@
+# [7.4.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.3.3...v7.4.0) (2024-12-23)
+
+
+### Bug Fixes
+
+* ussd lint APEXX-123 ([cb7ae4f](https://github.com/softwaregroup-bg/ut-ussd/commit/cb7ae4fb6cdc1e66a05768eb9f4262f4ae068d5f))
+
+
+### Features
+
+* add audits in USSD APEXX-123 ([46a0d15](https://github.com/softwaregroup-bg/ut-ussd/commit/46a0d15dff662fa0bb66de993c91cb187187e30f))
+
+
+
 ## [7.3.3](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.3.2...v7.3.3) (2024-06-13)
 
 
