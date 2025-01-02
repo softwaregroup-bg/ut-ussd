@@ -60,9 +60,7 @@ export interface handlers<location = ''> {
   'ussd.session.getRest'?: ut.handler<ussd_session_getRest.params, ussd_session_getRest.result, location>,
   ussdSessionGetRest?: ut.handler<ussd_session_getRest.params, ussd_session_getRest.result, location>,
   'ussd.session.removeRest'?: ut.handler<ussd_session_removeRest.params, ussd_session_removeRest.result, location>,
-  ussdSessionRemoveRest?: ut.handler<ussd_session_removeRest.params, ussd_session_removeRest.result, location>,
-  'ussd.session.add'?: ut.handler<ussd_session_add.params, ussd_session_add.result, location>,
-  ussdSessionAdd?: ut.handler<ussd_session_add.params, ussd_session_add.result, location>,
+  ussdSessionRemoveRest?: ut.handler<ussd_session_removeRest.params, ussd_session_removeRest.result, location>
 }
 
 export interface errors {

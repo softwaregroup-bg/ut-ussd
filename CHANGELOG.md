@@ -1,3 +1,12 @@
+# [7.5.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.4.0...v7.5.0) (2025-01-02)
+
+
+### Features
+
+* add session remove GTIHH-1 ([4a3c6a0](https://github.com/softwaregroup-bg/ut-ussd/commit/4a3c6a04eac974d0ad2322f038ecf3f7663cbfc6))
+
+
+
 # [7.4.0](https://github.com/softwaregroup-bg/ut-ussd/compare/v7.3.3...v7.4.0) (2024-12-23)
 
 
