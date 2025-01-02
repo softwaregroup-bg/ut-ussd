@@ -8,6 +8,7 @@ module.exports = function ussd() {
         require('./ussd.config.get'),
         require('./ussd.message.process'),
         require('./ussd.session.fetch'),
+        require('./ussd.session.add'),
         require('./ussd.session.get'),
         require('./ussd.session.remove')
     ];
